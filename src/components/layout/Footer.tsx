@@ -200,6 +200,10 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-foreground-muted text-fluid-body-sm text-center sm:text-left">
             &copy; {currentYear} Dr. Savita Kumari. {t('allRightsReserved')}
+            <span className="mx-2">·</span>
+            <a href="/admin/login" className="text-foreground-muted/60 hover:text-primary text-xs transition-colors">
+              Admin
+            </a>
           </p>
 
           <button
