@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: "Dr. Savita Kumari",
     images: [
       {
-        url: "https://drsavitak.netlify.app/images/dr-savita-profile.jpg",
+        url: "https://drsavitak.netlify.app/images/og-image.png",
         width: 600,
         height: 600,
         alt: "Dr. Savita Kumari - Homeopathic Medical Officer",
