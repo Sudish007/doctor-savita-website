@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase/client'
 
 /**
- * Admin login page — email/password only.
- * No registration; admin accounts are created directly in the Supabase dashboard.
+ * Simple admin login page with hardcoded password.
+ * For production, replace with proper Supabase auth once JWT keys are available.
  */
+
+const ADMIN_PASSWORD = 'savita2025'
+
 export default function AdminLoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -20,29 +22,14 @@ export default function AdminLoginPage() {
     setError(null)
     setLoading(true)
 
-    if (!supabase) {
-      setError('Supabase is not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables.')
-      setLoading(false)
-      return
-    }
-
-    try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-
-      if (signInError) {
-        setError(signInError.message)
-        setLoading(false)
-        return
-      }
-
-      // On success, redirect to admin dashboard
+    // Simple password check (temporary until Supabase auth works)
+    if (password === ADMIN_PASSWORD) {
+      // Set a cookie to maintain session
+      document.cookie = `admin_session=authenticated;path=/;max-age=86400`
       router.push('/admin/dashboard')
       router.refresh()
-    } catch (err: any) {
-      setError(err?.message || 'Login failed. Please check your credentials and try again.')
+    } else {
+      setError('Invalid password. Please try again.')
       setLoading(false)
     }
   }

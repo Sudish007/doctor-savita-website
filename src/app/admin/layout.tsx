@@ -1,29 +1,26 @@
 import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { headers, cookies } from 'next/headers'
 
 /**
  * Admin layout — wraps all /admin routes.
- * Checks Supabase auth session server-side.
- * Skips the auth check for /admin/login so users can access the login page.
- * Unauthenticated users on other admin pages are redirected to /admin/login.
+ * Checks for admin_session cookie.
+ * Unauthenticated users on admin pages are redirected to /admin/login.
  */
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  // Determine current path from the x-pathname header set by middleware
   const headersList = await headers()
   const pathname = headersList.get('x-pathname') || ''
   const isLoginPage = pathname.startsWith('/admin/login')
 
   // Skip auth check on the login page
   if (!isLoginPage) {
-    const supabase = await createSupabaseServerClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const cookieStore = await cookies()
+    const session = cookieStore.get('admin_session')?.value
 
-    if (!user) {
+    if (session !== 'authenticated') {
       redirect('/admin/login')
     }
   }
