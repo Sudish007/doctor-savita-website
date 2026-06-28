@@ -24,9 +24,6 @@ export const metadata: Metadata = {
   },
   description:
     "Dr. Savita Kumari - Homeopathic Medical Officer, AYUSH Dept., Govt. of Bihar. Specializing in holistic homeopathic treatments in Siwan, Bihar.",
-  icons: {
-    icon: '/favicon.png',
-  },
 };
 
 export default async function RootLayout({
