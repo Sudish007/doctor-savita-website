@@ -1,0 +1,159 @@
+/* ==========================================================================
+   Theme CSS Custom Properties
+   Dr. Savita Kumari - Professional Website
+   
+   Defines CSS variables for light and dark modes using a calming green palette
+   inspired by homeopathy, nature, and healing.
+   
+   Requirements: 11.1, 11.2, 18.1, 18.7, 16.5
+   ========================================================================== */
+
+:root {
+  /* ---- Primary Colors (Sage / Emerald / Mint) ---- */
+  --color-sage-50: #f2f7f2;
+  --color-sage-100: #e0ede0;
+  --color-sage-200: #c3dbc3;
+  --color-sage-300: #9cc39c;
+  --color-sage-400: #72a872;
+  --color-sage-500: #528c52;
+  --color-sage-600: #3f703f;
+  --color-sage-700: #345a34;
+  --color-sage-800: #2c492c;
+  --color-sage-900: #243d24;
+
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+
+  --color-mint-50: #f0fdfa;
+  --color-mint-100: #ccfbf1;
+  --color-mint-200: #99f6e4;
+  --color-mint-300: #5eead4;
+  --color-mint-400: #2dd4bf;
+  --color-mint-500: #14b8a6;
+  --color-mint-600: #0d9488;
+  --color-mint-700: #0f766e;
+  --color-mint-800: #115e59;
+  --color-mint-900: #134e4a;
+
+  /* ---- Light Mode Tokens ---- */
+  --background: #f0f5f0;
+  --background-secondary: #ffffff;
+  --background-tertiary: #f8faf8;
+  --foreground: #1a2e1a;
+  --foreground-secondary: #3d5a3d;
+  --foreground-muted: #5c7a5c;
+
+  --primary: #528c52;
+  --primary-hover: #3f703f;
+  --primary-light: #e0ede0;
+  --primary-foreground: #ffffff;
+
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --accent-light: #d1fae5;
+  --accent-foreground: #064e3b;
+
+  --card: #ffffff;
+  --card-foreground: #1a2e1a;
+  --card-border: rgba(82, 140, 82, 0.15);
+
+  --border: rgba(82, 140, 82, 0.2);
+  --border-light: rgba(82, 140, 82, 0.1);
+
+  --muted: #f2f7f2;
+  --muted-foreground: #5c7a5c;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  --ring: rgba(82, 140, 82, 0.4);
+
+  /* ---- Glassmorphism Tokens ---- */
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-bg-heavy: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(82, 140, 82, 0.08);
+
+  /* ---- Gradient Tokens ---- */
+  --gradient-hero: linear-gradient(135deg, #e0ede0 0%, #d1fae5 50%, #ccfbf1 100%);
+  --gradient-accent: linear-gradient(135deg, #528c52 0%, #10b981 100%);
+  --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(240,253,245,0.9) 100%);
+
+  /* ---- Typography Fluid Sizes ---- */
+  --font-size-h1: clamp(1.5rem, 3vw, 3.5rem);
+  --font-size-h2: clamp(1.25rem, 2.5vw, 2.8rem);
+  --font-size-h3: clamp(1.1rem, 2vw, 2.25rem);
+  --font-size-h4: clamp(1rem, 1.6vw, 1.8rem);
+  --font-size-h5: clamp(0.95rem, 1.3vw, 1.44rem);
+  --font-size-h6: clamp(0.9rem, 1.1vw, 1.15rem);
+  --font-size-body: clamp(1rem, 1.1rem, 1.25rem);
+  --font-size-body-sm: clamp(0.875rem, 0.95rem, 1rem);
+  --font-size-caption: clamp(0.75rem, 0.85rem, 0.875rem);
+
+  /* ---- Fluid Spacing ---- */
+  --spacing-section: clamp(2rem, 5vw, 6rem);
+  --spacing-section-sm: clamp(1.5rem, 3vw, 4rem);
+  --spacing-container: clamp(1rem, 3vw, 2rem);
+
+  /* ---- Letter Spacing ---- */
+  --tracking-tight: -0.04em;
+  --tracking-snug: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.02em;
+
+  /* ---- Transitions ---- */
+  --transition-colors: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+  --transition-transform: transform 200ms ease;
+  --transition-all: all 300ms ease;
+}
+
+/* ---- Dark Mode ---- */
+.dark {
+  --background: #0d1f0d;
+  --background-secondary: #1a2e1a;
+  --background-tertiary: #152715;
+  --foreground: #f0f5f0;
+  --foreground-secondary: #c8dcc8;
+  --foreground-muted: #8fbf8f;
+
+  --primary: #8fbf8f;
+  --primary-hover: #a8d4a8;
+  --primary-light: #1a2e1a;
+  --primary-foreground: #0d1f0d;
+
+  --accent: #34d399;
+  --accent-hover: #6ee7b7;
+  --accent-light: #1a2e1a;
+  --accent-foreground: #d1fae5;
+
+  --card: #1a2e1a;
+  --card-foreground: #f0f5f0;
+  --card-border: rgba(143, 191, 143, 0.2);
+
+  --border: rgba(143, 191, 143, 0.25);
+  --border-light: rgba(143, 191, 143, 0.12);
+
+  --muted: #152715;
+  --muted-foreground: #8fbf8f;
+
+  --ring: rgba(143, 191, 143, 0.5);
+
+  /* ---- Glassmorphism Tokens (Dark) ---- */
+  --glass-bg: rgba(26, 46, 26, 0.75);
+  --glass-bg-heavy: rgba(26, 46, 26, 0.85);
+  --glass-border: rgba(143, 191, 143, 0.15);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* ---- Gradient Tokens (Dark) ---- */
+  --gradient-hero: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #15271f 100%);
+  --gradient-accent: linear-gradient(135deg, #8fbf8f 0%, #34d399 100%);
+  --gradient-card: linear-gradient(135deg, rgba(26,46,26,0.9) 0%, rgba(21,39,21,0.9) 100%);
+}
