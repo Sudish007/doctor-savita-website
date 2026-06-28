@@ -26,20 +26,25 @@ export default function AdminLoginPage() {
       return
     }
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-    if (signInError) {
-      setError(signInError.message)
+      if (signInError) {
+        setError(signInError.message)
+        setLoading(false)
+        return
+      }
+
+      // On success, redirect to admin dashboard
+      router.push('/admin/dashboard')
+      router.refresh()
+    } catch (err: any) {
+      setError(err?.message || 'Login failed. Please check your credentials and try again.')
       setLoading(false)
-      return
     }
-
-    // On success, redirect to admin dashboard
-    router.push('/admin/dashboard')
-    router.refresh()
   }
 
   return (
