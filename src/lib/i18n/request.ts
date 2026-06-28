@@ -1,16 +1,30 @@
 import { getRequestConfig } from 'next-intl/server';
+import { cookies } from 'next/headers';
 import { defaultLocale, type Locale, locales } from './config';
 
 /**
  * next-intl request configuration.
- * Since we use client-side locale switching (localStorage),
- * we default to English on the server and let the client
- * hydrate with the user's stored preference.
+ * Reads locale from NEXT_LOCALE cookie (set by LanguageToggle on switch).
+ * Falls back to 'en' if no cookie or invalid value.
  */
 export default getRequestConfig(async ({ requestLocale }) => {
+  // Try requestLocale first (from middleware if active)
   let locale = await requestLocale;
 
-  // Validate the locale, fall back to default if invalid
+  // If not set, read from NEXT_LOCALE cookie
+  if (!locale || !locales.includes(locale as Locale)) {
+    try {
+      const cookieStore = await cookies();
+      const cookieLocale = cookieStore.get('NEXT_LOCALE')?.value;
+      if (cookieLocale && locales.includes(cookieLocale as Locale)) {
+        locale = cookieLocale;
+      }
+    } catch {
+      // cookies() may fail in some contexts
+    }
+  }
+
+  // Final fallback
   if (!locale || !locales.includes(locale as Locale)) {
     locale = defaultLocale;
   }
