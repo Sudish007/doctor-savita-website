@@ -20,6 +20,12 @@ export default function AdminLoginPage() {
     setError(null)
     setLoading(true)
 
+    if (!supabase) {
+      setError('Supabase is not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables.')
+      setLoading(false)
+      return
+    }
+
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
