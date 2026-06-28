@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 
-import { sanityClient } from '@/lib/sanity/client';
-import { todayHealthCalendarQuery } from '@/lib/sanity/queries';
 import {
   getTodayMMDD,
   getTodaysHealthDay,
@@ -49,10 +47,17 @@ export async function GET(request: Request) {
     // 3. Check Sanity CMS for today's health calendar entry
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
 
-    // Try to fetch the health calendar entry from Sanity
-    const sanityEntry = await sanityClient.fetch(todayHealthCalendarQuery, {
-      today,
-    }).catch(() => null);
+    // Try to fetch the health calendar entry from Sanity (dynamic import to avoid build-time crash)
+    let sanityEntry = null;
+    try {
+      const { getSanityClient } = await import('@/lib/sanity/client');
+      const { todayHealthCalendarQuery } = await import('@/lib/sanity/queries');
+      const client = getSanityClient();
+      sanityEntry = await client.fetch(todayHealthCalendarQuery, { today });
+    } catch {
+      // Sanity not configured — skip
+      sanityEntry = null;
+    }
 
     if (sanityEntry) {
       // If a CMS entry exists with a template article, publish it
@@ -61,7 +66,8 @@ export async function GET(request: Request) {
       if (articleToPublish && articleToPublish.status !== 'published') {
         // Update article status from 'scheduled' to 'published' in Sanity
         try {
-          await sanityClient
+          const { getSanityClient } = await import('@/lib/sanity/client');
+          await getSanityClient()
             .patch(articleToPublish._id)
             .set({ status: 'published', publishDate: new Date().toISOString() })
             .commit();
