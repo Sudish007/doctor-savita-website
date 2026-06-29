@@ -1,9 +1,8 @@
 /**
- * AI Symptom Chatbot API Route
- * Uses OpenAI API directly for streaming responses.
+ * AI Symptom Chatbot API Route — Uses Google Gemini (free)
  */
 
-const SYSTEM_PROMPT = `You are Dr. Savita's AI assistant specializing in homeopathic guidance. Help patients understand their symptoms and suggest relevant homeopathic services. Always include a reminder that this is not medical advice and patients should book an appointment for proper diagnosis. Keep responses concise and focused on homeopathy. Respond in 2-3 short paragraphs max.
+const SYSTEM_PROMPT = `You are Dr. Savita's AI assistant specializing in homeopathic guidance. Help patients understand their symptoms and suggest relevant homeopathic services. Always include a reminder that this is not medical advice and patients should book an appointment for proper diagnosis. Keep responses concise (2-3 short paragraphs max) and focused on homeopathy.
 
 Available services: Skin Disorders, Digestive Issues, Respiratory Ailments, Women's Health, Child Health, Mental Wellness, Chronic Diseases.
 
@@ -13,79 +12,67 @@ export async function POST(request: Request) {
   try {
     const { messages } = await request.json();
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'OpenAI API key not configured' }), {
+      return new Response(JSON.stringify({ error: 'Gemini API key not configured' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          ...messages,
-        ],
-        stream: true,
-      }),
+    // Convert messages to Gemini format
+    const contents = [];
+    
+    // Add system instruction as first user message context
+    contents.push({
+      role: 'user',
+      parts: [{ text: SYSTEM_PROMPT + '\n\nNow respond to the patient:' }],
     });
+    contents.push({
+      role: 'model',
+      parts: [{ text: 'I understand. I will help patients with homeopathic guidance as Dr. Savita\'s assistant.' }],
+    });
+
+    // Add conversation messages
+    for (const msg of messages) {
+      contents.push({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }],
+      });
+    }
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents }),
+      }
+    );
 
     if (!response.ok) {
       const err = await response.text();
-      console.error('[Chatbot API] OpenAI error:', err);
+      console.error('[Chatbot API] Gemini error:', err);
       return new Response(JSON.stringify({ error: 'AI service error' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // Stream the response using Vercel AI SDK format (0:"text")
+    const data = await response.json();
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response. Please try again.';
+
+    // Return in streaming format (0:"text") for compatibility with our client
     const encoder = new TextEncoder();
-    const reader = response.body?.getReader();
-    const decoder = new TextDecoder();
-
     const stream = new ReadableStream({
-      async start(controller) {
-        if (!reader) { controller.close(); return; }
-
-        let buffer = '';
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-
-          for (const line of lines) {
-            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
-              try {
-                const json = JSON.parse(line.slice(6));
-                const content = json.choices?.[0]?.delta?.content;
-                if (content) {
-                  // Vercel AI SDK format: 0:"text"
-                  controller.enqueue(encoder.encode(`0:${JSON.stringify(content)}\n`));
-                }
-              } catch { /* skip */ }
-            }
-          }
-        }
+      start(controller) {
+        controller.enqueue(encoder.encode(`0:${JSON.stringify(aiText)}\n`));
         controller.close();
       },
     });
 
     return new Response(stream, {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Transfer-Encoding': 'chunked',
-      },
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     });
   } catch (error) {
     console.error('[Chatbot API] Error:', error);
