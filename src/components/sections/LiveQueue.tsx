@@ -81,21 +81,25 @@ export function LiveQueue() {
   /** Fallback: join queue directly via Supabase client (RLS disabled) */
   async function joinQueueDirect(): Promise<number | null> {
     try {
-      const { createClient } = await import('@supabase/supabase-js')
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-      if (!url || !key) return null
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+      if (!supabaseUrl || !supabaseKey) return null
 
-      const sb = createClient(url, key)
+      // Use dynamic import to avoid bundling issues
+      const { createClient } = await import('@supabase/supabase-js')
+      const sb = createClient(supabaseUrl, supabaseKey)
 
       // Fetch current state
-      const { data: state } = await sb
+      const { data: state, error } = await sb
         .from('queue_status')
         .select('*')
         .eq('id', 1)
         .single()
 
-      if (!state) return null
+      if (error || !state) {
+        // If table doesn't exist or can't connect, use localStorage counter
+        return joinQueueLocal()
+      }
 
       const newWaiting = (state.waiting_count || 0) + 1
       const assignedToken = (state.current_token || 0) + newWaiting
@@ -108,8 +112,17 @@ export function LiveQueue() {
 
       return assignedToken
     } catch {
-      return null
+      return joinQueueLocal()
     }
+  }
+
+  /** Last resort: local token counter using localStorage */
+  function joinQueueLocal(): number {
+    const stored = localStorage.getItem('queue_token_counter')
+    const current = stored ? parseInt(stored, 10) : 0
+    const newToken = current + 1
+    localStorage.setItem('queue_token_counter', newToken.toString())
+    return newToken
   }
 
   return (
