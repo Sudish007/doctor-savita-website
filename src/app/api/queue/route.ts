@@ -168,6 +168,18 @@ async function handleResetQueue() {
  * 4. Optionally saves phone to queue_subscriptions for WhatsApp notification
  */
 async function handleJoinQueue(phone?: string) {
+  // Check if supabaseAdmin is configured
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Database not configured. Missing SUPABASE_SERVICE_ROLE_KEY.',
+        debug: { hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL, hasKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY },
+      },
+      { status: 500 }
+    )
+  }
+
   // Fetch current queue state
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: currentState, error: fetchError } = await (supabaseAdmin as any)
@@ -181,7 +193,8 @@ async function handleJoinQueue(phone?: string) {
     return NextResponse.json(
       {
         success: false,
-        message: 'Failed to fetch current queue state.',
+        message: `Failed to fetch queue state: ${fetchError?.message || 'No data found'}`,
+        debug: { code: fetchError?.code, details: fetchError?.details, hint: fetchError?.hint },
       },
       { status: 500 }
     )
