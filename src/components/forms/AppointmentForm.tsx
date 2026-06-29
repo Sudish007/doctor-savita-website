@@ -333,7 +333,8 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
 
   function getPaymentAmount(): number {
     if (!pendingData) return 300
-    return pendingData.consultationType === 'online' ? 200 : 300
+    const svc = SERVICES.find(s => s.id === selectedService) || SERVICES[0]
+    return pendingData.consultationType === 'online' ? svc.amountOnline : svc.amountInPerson
   }
 
   function getUpiLink(scheme: string): string {
@@ -366,10 +367,22 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
     reset()
   }
 
+  // Payment step state
+  const [selectedService, setSelectedService] = useState<string>('initial')
+
+  const SERVICES = [
+    { id: 'initial', label: 'Initial Consultation', amountInPerson: 300, amountOnline: 200 },
+    { id: 'followup', label: 'Follow-up Visit', amountInPerson: 100, amountOnline: 100 },
+    { id: 'online30', label: 'Online Consultation (30 min)', amountInPerson: 200, amountOnline: 200 },
+    { id: 'video20', label: 'Video Consultation (20 min)', amountInPerson: 150, amountOnline: 150 },
+    { id: 'monthlyKit', label: 'Monthly Remedy Kit', amountInPerson: 200, amountOnline: 200 },
+  ]
+
   // ─── Payment Step View ─────────────────────────────────────────────────────
   if (showPayment && pendingData) {
     const isOnline = pendingData.consultationType === 'online'
-    const amount = getPaymentAmount()
+    const currentService = SERVICES.find(s => s.id === selectedService) || SERVICES[0]
+    const amount = isOnline ? currentService.amountOnline : currentService.amountInPerson
 
     const UPI_APPS = [
       { name: 'Google Pay', icon: <GPayIcon />, scheme: 'gpay://upi/pay' },
@@ -419,7 +432,30 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
               <div className="flex justify-between"><span className="text-foreground-muted">Date:</span><span className="font-medium">{pendingData.preferredDate}</span></div>
               <div className="flex justify-between"><span className="text-foreground-muted">Time:</span><span className="font-medium">{pendingData.preferredTime}</span></div>
               <div className="flex justify-between"><span className="text-foreground-muted">Type:</span><span className="font-medium">{pendingData.consultationType === 'online' ? 'Online' : 'In-Person'}</span></div>
-              <div className="flex justify-between border-t border-border-light pt-1 mt-1"><span className="font-medium text-foreground">Amount:</span><span className="font-bold text-primary text-lg">₹{amount}</span></div>
+            </div>
+
+            {/* Service/Consultation Type Selector */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-foreground-secondary mb-2">
+                Select Consultation Type
+              </label>
+              <select
+                value={selectedService}
+                onChange={(e) => setSelectedService(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl text-sm bg-background-secondary text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {SERVICES.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.label} — ₹{isOnline ? s.amountOnline : s.amountInPerson}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Amount */}
+            <div className="text-center mb-4 p-3 rounded-xl bg-primary/5 border border-primary/20">
+              <p className="text-xs text-foreground-muted">Amount to Pay</p>
+              <p className="text-3xl font-bold text-primary">₹{amount}</p>
             </div>
 
             {/* QR Code - works with ALL UPI apps */}
