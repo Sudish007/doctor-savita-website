@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { UpiQrCode } from '@/components/ui/UpiQrCode'
+import { GPayIcon, PhonePeIcon, PaytmIcon, BhimIcon, AmazonPayIcon, WhatsAppPayIcon } from '@/components/ui/UpiIcons'
 
 /**
  * Payment Section — UPI payment options for consultations.
@@ -19,47 +21,40 @@ const WHATSAPP_NUMBER = '916204309476'
 
 interface UpiApp {
   name: string
-  logo: string
+  icon: React.ReactNode
   scheme: string
-  bgColor: string
 }
 
 const UPI_APPS: UpiApp[] = [
   {
     name: 'Google Pay',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png',
+    icon: <GPayIcon />,
     scheme: 'gpay://upi/pay',
-    bgColor: 'bg-white',
   },
   {
     name: 'PhonePe',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/512px-PhonePe_Logo.svg.png',
+    icon: <PhonePeIcon />,
     scheme: 'phonepe://pay',
-    bgColor: 'bg-[#5f259f]/5',
   },
   {
     name: 'Paytm',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/512px-Paytm_Logo_%28standalone%29.svg.png',
+    icon: <PaytmIcon />,
     scheme: 'paytmmp://pay',
-    bgColor: 'bg-[#00BAF2]/5',
   },
   {
     name: 'BHIM',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/512px-UPI-Logo-vector.svg.png',
+    icon: <BhimIcon />,
     scheme: 'upi://pay',
-    bgColor: 'bg-white',
   },
   {
     name: 'Amazon Pay',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Amazon_Pay_logo.svg/512px-Amazon_Pay_logo.svg.png',
+    icon: <AmazonPayIcon />,
     scheme: 'amazonpay://pay',
-    bgColor: 'bg-white',
   },
   {
     name: 'WhatsApp Pay',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png',
+    icon: <WhatsAppPayIcon />,
     scheme: 'whatsapp://pay',
-    bgColor: 'bg-[#25D366]/5',
   },
 ]
 
@@ -194,10 +189,20 @@ export function Payment() {
                 <p className="text-3xl font-bold text-primary">₹{selectedAmount}</p>
               </div>
 
+              {/* QR Code */}
+              <div className="mb-6 flex justify-center">
+                <UpiQrCode
+                  upiId={UPI_ID}
+                  payeeName="Dr Savita Kumari"
+                  amount={selectedAmount}
+                  size={200}
+                />
+              </div>
+
               {/* UPI App Buttons */}
               <div className="mb-6">
-                <p className="text-sm font-medium text-foreground-secondary mb-3">
-                  Pay using your preferred UPI app:
+                <p className="text-xs font-medium text-foreground-muted mb-2 text-center">
+                  Or quick pay via app (mobile):
                 </p>
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                   {UPI_APPS.map((app) => (
@@ -206,34 +211,15 @@ export function Payment() {
                       href={getUpiLink(app.scheme, selectedAmount)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border hover:border-primary/50 hover:shadow-md transition-all duration-200 ${app.bgColor}`}
+                      className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border hover:border-primary/50 hover:shadow-md transition-all"
                     >
-                      <img
-                        src={app.logo}
-                        alt={app.name}
-                        className="w-10 h-10 object-contain"
-                        loading="lazy"
-                      />
+                      {app.icon}
                       <span className="text-[10px] text-foreground-muted text-center leading-tight font-medium">
                         {app.name}
                       </span>
                     </a>
                   ))}
                 </div>
-              </div>
-
-              {/* Generic UPI Link (fallback) */}
-              <div className="mb-6 text-center">
-                <a
-                  href={getUpiLink('upi://pay', selectedAmount)}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm bg-[#5f259f] text-white hover:bg-[#4a1d7a] transition-colors shadow-elevation-2"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                    <line x1="1" y1="10" x2="23" y2="10" />
-                  </svg>
-                  Pay ₹{selectedAmount} via Any UPI App
-                </a>
               </div>
 
               {/* Share Screenshot on WhatsApp */}

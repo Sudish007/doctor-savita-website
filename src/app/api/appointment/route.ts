@@ -52,6 +52,7 @@ export async function POST(request: Request) {
         consultation_type: formData.consultationType,
         reason_for_visit: formData.reasonForVisit,
         status: 'pending',
+        payment_status: formData.consultationType === 'in-person' ? 'pay_at_clinic' : 'pending',
         whatsapp_sent: false,
       })
       .select('id')

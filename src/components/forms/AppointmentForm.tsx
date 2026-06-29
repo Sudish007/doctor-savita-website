@@ -10,6 +10,8 @@ import {
   getEligibleDates,
   CLINIC_HOLIDAYS,
 } from '@/lib/validators/appointment'
+import { UpiQrCode } from '@/components/ui/UpiQrCode'
+import { GPayIcon, PhonePeIcon, PaytmIcon, BhimIcon, AmazonPayIcon, WhatsAppPayIcon } from '@/components/ui/UpiIcons'
 import type { AppointmentFormData, ConsultationType } from '@/types'
 
 /**
@@ -146,7 +148,9 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [showPayment, setShowPayment] = useState(false)
   const [pendingData, setPendingData] = useState<AppointmentFormData | null>(null)
+  const [bookingId, setBookingId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [savingAppointment, setSavingAppointment] = useState(false)
 
   const labels = LABELS[locale]
   const messages = VALIDATION_MESSAGES[locale]
@@ -231,9 +235,30 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
     }
 
     setFieldErrors({})
-    // Show payment step instead of directly submitting
-    setPendingData(result.data as AppointmentFormData)
-    setShowPayment(true)
+    // Save appointment immediately as pending, then show payment
+    saveAndShowPayment(result.data as AppointmentFormData)
+  }
+
+  /** Save appointment to Supabase immediately (status: pending), then show payment step */
+  async function saveAndShowPayment(data: AppointmentFormData) {
+    setSavingAppointment(true)
+    try {
+      const response = await fetch('/api/appointment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const result = await response.json()
+      if (result.success && result.bookingId) {
+        setBookingId(result.bookingId)
+      }
+    } catch {
+      // Even if save fails, show payment step — user can still pay
+    } finally {
+      setSavingAppointment(false)
+      setPendingData(data)
+      setShowPayment(true)
+    }
   }
 
   /** Map Zod error to localized validation message */
@@ -354,12 +379,12 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
     const amount = getPaymentAmount()
 
     const UPI_APPS = [
-      { name: 'Google Pay', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png', scheme: 'gpay://upi/pay' },
-      { name: 'PhonePe', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/512px-PhonePe_Logo.svg.png', scheme: 'phonepe://pay' },
-      { name: 'Paytm', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/512px-Paytm_Logo_%28standalone%29.svg.png', scheme: 'paytmmp://pay' },
-      { name: 'BHIM UPI', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/512px-UPI-Logo-vector.svg.png', scheme: 'upi://pay' },
-      { name: 'Amazon Pay', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Amazon_Pay_logo.svg/512px-Amazon_Pay_logo.svg.png', scheme: 'amazonpay://pay' },
-      { name: 'WhatsApp Pay', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png', scheme: 'whatsapp://pay' },
+      { name: 'Google Pay', icon: <GPayIcon />, scheme: 'gpay://upi/pay' },
+      { name: 'PhonePe', icon: <PhonePeIcon />, scheme: 'phonepe://pay' },
+      { name: 'Paytm', icon: <PaytmIcon />, scheme: 'paytmmp://pay' },
+      { name: 'BHIM UPI', icon: <BhimIcon />, scheme: 'upi://pay' },
+      { name: 'Amazon Pay', icon: <AmazonPayIcon />, scheme: 'amazonpay://pay' },
+      { name: 'WhatsApp Pay', icon: <WhatsAppPayIcon />, scheme: 'whatsapp://pay' },
     ]
 
     return (
@@ -380,14 +405,20 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
               <span className="w-8 h-8 rounded-full bg-muted text-foreground-muted flex items-center justify-center text-sm font-bold">3</span>
             </div>
 
-            <h2 className="text-fluid-h3 font-heading text-foreground text-center mb-2">
+            <h2 className="text-fluid-h3 font-heading text-foreground text-center mb-1">
               {isOnline ? '💳 Pay to Confirm Booking' : '💳 Payment Options'}
             </h2>
             <p className="text-foreground-muted text-center mb-6 text-fluid-body-sm">
               {isOnline
-                ? `Pay ₹${amount} via UPI to confirm your online consultation`
-                : `Pay ₹${amount} online now or at the clinic during your visit`}
+                ? 'Your appointment is saved. Complete payment to confirm.'
+                : 'Your appointment is saved. Pay online or at the clinic.'}
             </p>
+
+            {bookingId && (
+              <p className="text-xs text-center text-foreground-muted mb-4">
+                Booking ID: <span className="font-mono font-medium text-foreground">{bookingId.slice(0, 8)}</span>
+              </p>
+            )}
 
             {/* Booking Summary */}
             <div className="bg-muted dark:bg-background-tertiary rounded-xl p-4 mb-6 text-sm space-y-1">
@@ -398,9 +429,19 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
               <div className="flex justify-between border-t border-border-light pt-1 mt-1"><span className="font-medium text-foreground">Amount:</span><span className="font-bold text-primary text-lg">₹{amount}</span></div>
             </div>
 
-            {/* UPI ID */}
+            {/* QR Code - works with ALL UPI apps */}
+            <div className="mb-6 flex justify-center">
+              <UpiQrCode
+                upiId={UPI_ID}
+                payeeName="Dr Savita Kumari"
+                amount={amount}
+                size={200}
+              />
+            </div>
+
+            {/* UPI ID with copy */}
             <div className="mb-5 p-3 rounded-xl bg-background-secondary border border-border">
-              <p className="text-xs text-foreground-muted mb-1 font-medium uppercase tracking-wide">UPI ID</p>
+              <p className="text-xs text-foreground-muted mb-1 font-medium uppercase tracking-wide">Or pay manually to UPI ID</p>
               <div className="flex items-center gap-2">
                 <code className="flex-1 text-sm font-mono text-foreground break-all">{UPI_ID}</code>
                 <button
@@ -414,40 +455,31 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
               </div>
             </div>
 
-            {/* UPI App Grid */}
-            <div className="mb-5">
-              <p className="text-sm font-medium text-foreground-secondary mb-3">Pay using:</p>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            {/* UPI App Quick Links (mobile deep links) */}
+            <div className="mb-6">
+              <p className="text-xs font-medium text-foreground-muted mb-2 text-center">Quick pay via app (mobile only):</p>
+              <div className="grid grid-cols-6 gap-2">
                 {UPI_APPS.map((app) => (
                   <a
                     key={app.name}
-                    href={getUpiLink(app.scheme)}
+                    href={getUpiDeepLink(app.scheme)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-col items-center gap-1 p-2.5 rounded-xl border border-border hover:border-primary/50 hover:shadow-md transition-all bg-white dark:bg-gray-800"
+                    className="flex flex-col items-center gap-1 p-2 rounded-xl border border-border hover:border-primary/50 hover:shadow-md transition-all"
+                    title={app.name}
                   >
-                    <img src={app.logo} alt={app.name} className="w-9 h-9 object-contain" loading="lazy" />
-                    <span className="text-[9px] text-foreground-muted text-center leading-tight font-medium">{app.name}</span>
+                    {app.icon}
+                    <span className="text-[8px] text-foreground-muted text-center leading-tight">{app.name.split(' ')[0]}</span>
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* Generic UPI button */}
-            <div className="text-center mb-5">
-              <a
-                href={getUpiLink('upi://pay')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-[#5f259f] text-white hover:bg-[#4a1d7a] transition-colors"
-              >
-                Pay ₹{amount} via Any UPI App
-              </a>
-            </div>
-
-            {/* After payment actions */}
+            {/* Action Buttons */}
             <div className="border-t border-border-light pt-5 space-y-3">
-              {/* I've Paid - Confirm Booking */}
+              {/* I've Paid */}
               <button
-                onClick={confirmAppointmentAfterPayment}
+                onClick={() => confirmPayment('paid')}
                 disabled={isSubmitting}
                 className="w-full py-3.5 px-6 rounded-xl font-medium text-base bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors shadow-elevation-2"
               >
@@ -467,20 +499,20 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
                 Share Payment Screenshot on WhatsApp
               </a>
 
-              {/* Pay at Clinic option (for in-person only) */}
+              {/* Pay at Clinic option (for in-person) */}
               {!isOnline && (
                 <button
-                  onClick={confirmAppointmentAfterPayment}
+                  onClick={() => confirmPayment('pay_at_clinic')}
                   disabled={isSubmitting}
                   className="w-full py-3 px-6 rounded-xl font-medium text-sm border-2 border-border text-foreground hover:bg-muted transition-colors"
                 >
-                  {isSubmitting ? '⏳ Confirming...' : '🏥 Will Pay in Cash at Clinic — Confirm Appointment'}
+                  {isSubmitting ? '⏳ Confirming...' : '🏥 Will Pay in Cash at Clinic — Confirm'}
                 </button>
               )}
 
               {/* Back button */}
               <button
-                onClick={() => setShowPayment(false)}
+                onClick={() => { setShowPayment(false); setPendingData(null) }}
                 className="w-full py-2 text-sm text-foreground-muted hover:text-foreground transition-colors"
               >
                 ← Back to Edit Details
