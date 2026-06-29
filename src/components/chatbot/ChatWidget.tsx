@@ -11,29 +11,119 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useChat } from '@ai-sdk/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatMessage from './ChatMessage';
 import QuickReplies from './QuickReplies';
 
 const WELCOME_MESSAGE = "Hello! I'm Dr. Savita's AI assistant. I can help you understand your symptoms and find the right homeopathic treatment. How can I help you today?";
 
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [localInput, setLocalInput] = useState('');
-  const { messages, handleSubmit: aiHandleSubmit, append, status } = useChat({
-    api: '/api/chatbot',
-  });
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const isLoading = status === 'streaming' || status === 'submitted';
-
-  const handleLocalSubmit = (e: React.FormEvent) => {
+  const handleLocalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!localInput.trim() || isLoading) return;
-    append({ role: 'user', content: localInput.trim() });
+
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: localInput.trim() };
+    setMessages(prev => [...prev, userMsg]);
     setLocalInput('');
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
+      });
+
+      if (!res.ok) {
+        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
+        return;
+      }
+
+      // Read streaming response
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantContent = '';
+      const assistantId = (Date.now() + 1).toString();
+      setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: '' }]);
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          // Parse SSE data lines
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('0:')) {
+              // Vercel AI SDK data format: 0:"text content"
+              try {
+                const text = JSON.parse(line.slice(2));
+                assistantContent += text;
+                setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: assistantContent } : m));
+              } catch { /* skip non-JSON lines */ }
+            }
+          }
+        }
+      }
+    } catch {
+      setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: 'Network error. Please check your connection and try again.' }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleQuickReply = (message: string) => {
+    setLocalInput(message);
+    // Auto-submit
+    const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
+    setTimeout(() => {
+      const userMsg: Message = { id: Date.now().toString(), role: 'user', content: message };
+      setMessages(prev => [...prev, userMsg]);
+      setIsLoading(true);
+      fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
+      }).then(async res => {
+        if (!res.ok) {
+          setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: 'assistant', content: 'Sorry, I encountered an error.' }]);
+          return;
+        }
+        const reader = res.body?.getReader();
+        const decoder = new TextDecoder();
+        let content = '';
+        const id = (Date.now()+1).toString();
+        setMessages(prev => [...prev, { id, role: 'assistant', content: '' }]);
+        if (reader) {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split('\n');
+            for (const line of lines) {
+              if (line.startsWith('0:')) {
+                try { content += JSON.parse(line.slice(2)); setMessages(prev => prev.map(m => m.id === id ? { ...m, content } : m)); } catch {}
+              }
+            }
+          }
+        }
+      }).catch(() => {
+        setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: 'assistant', content: 'Network error.' }]);
+      }).finally(() => { setIsLoading(false); setLocalInput(''); });
+    }, 100);
   };
 
   // Auto-scroll to bottom when messages change
@@ -41,9 +131,7 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleQuickReply = (message: string) => {
-    append({ role: 'user', content: message });
-  };
+  // Auto-scroll handled below
 
   const handleBookAppointment = (service?: string) => {
     const params = new URLSearchParams();
