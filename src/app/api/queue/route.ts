@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   try {
     // 1. Parse and validate request body
     const body = await request.json()
-    const { action, phone } = body as { action: string; phone?: string }
+    const { action, phone, patientName, patientId } = body as { action: string; phone?: string; patientName?: string; patientId?: string }
 
     if (!action || !['next', 'reset', 'join'].includes(action)) {
       return NextResponse.json(
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     }
 
     if (action === 'join') {
-      return handleJoinQueue(phone)
+      return handleJoinQueue(phone, patientName, patientId)
     }
 
     return handleResetQueue()
@@ -167,7 +167,7 @@ async function handleResetQueue() {
  * 3. Assigns token number = current_token + new waiting_count
  * 4. Optionally saves phone to queue_subscriptions for WhatsApp notification
  */
-async function handleJoinQueue(phone?: string) {
+async function handleJoinQueue(phone?: string, patientName?: string, patientId?: string) {
   // Check if supabaseAdmin is configured
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return NextResponse.json(
@@ -226,22 +226,22 @@ async function handleJoinQueue(phone?: string) {
     )
   }
 
-  // If phone provided, save to queue_subscriptions for WhatsApp notification
-  if (phone && phone.trim().length >= 10) {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabaseAdmin as any)
-        .from('queue_subscriptions')
-        .insert({
-          phone_number: phone.trim().replace(/^\+91/, '').replace(/\D/g, ''),
-          token_number: assignedToken,
-          notified: false,
-          created_at: new Date().toISOString(),
-        })
-    } catch (err) {
-      // Non-critical — don't fail the join if subscription insert fails
-      console.error('[Queue API] Failed to save phone subscription:', err)
-    }
+  // Save to queue_subscriptions with patient details
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabaseAdmin as any)
+      .from('queue_subscriptions')
+      .insert({
+        phone_number: phone ? phone.trim().replace(/^\+91/, '').replace(/\D/g, '') : 'N/A',
+        token_number: assignedToken,
+        patient_id: patientId || null,
+        patient_name: patientName?.trim() || 'Walk-in',
+        notified: false,
+        created_at: new Date().toISOString(),
+      })
+  } catch (err) {
+    // Non-critical — don't fail the join if subscription insert fails
+    console.error('[Queue API] Failed to save subscription:', err)
   }
 
   const estimatedWait = newWaitingCount * 15
@@ -251,6 +251,7 @@ async function handleJoinQueue(phone?: string) {
     message: `You've been assigned Token #${assignedToken}`,
     data: {
       assignedToken,
+      patientId: patientId || null,
       currentToken: updatedState.current_token,
       waitingCount: updatedState.waiting_count,
       estimatedWaitMinutes: estimatedWait,
