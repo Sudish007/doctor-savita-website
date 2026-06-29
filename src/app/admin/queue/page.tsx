@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import { createClient } from '@supabase/supabase-js'
 
 interface QueueData {
   currentToken: number
@@ -8,11 +9,14 @@ interface QueueData {
   lastUpdated: string
 }
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const sb = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
+
 /**
  * Admin Queue Management page.
- * Provides "Next Patient" and "Reset Queue" controls with live queue status display.
- *
- * Requirements: 30.2
+ * Uses direct Supabase client for reliable reads/writes (bypasses server API issues).
+ * Auto-refreshes every 10 seconds.
  */
 export default function AdminQueuePage() {
   const [queue, setQueue] = useState<QueueData>({
@@ -23,61 +27,106 @@ export default function AdminQueuePage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
-  useEffect(() => {
-    fetchQueueState()
+  const fetchQueueState = useCallback(async () => {
+    if (!sb) return
+    try {
+      const { data, error } = await sb
+        .from('queue_status')
+        .select('*')
+        .eq('id', 1)
+        .single()
+
+      if (!error && data) {
+        setQueue({
+          currentToken: data.current_token ?? 0,
+          waitingCount: data.waiting_count ?? 0,
+          lastUpdated: data.last_updated ?? new Date().toISOString(),
+        })
+      }
+    } catch {
+      // Fallback to API
+      try {
+        const res = await fetch('/api/queue/state')
+        if (res.ok) {
+          const data = await res.json()
+          setQueue({
+            currentToken: data.currentToken ?? 0,
+            waitingCount: data.waitingCount ?? 0,
+            lastUpdated: data.lastUpdated ?? new Date().toISOString(),
+          })
+        }
+      } catch { /* ignore */ }
+    }
   }, [])
 
-  async function fetchQueueState() {
-    try {
-      const res = await fetch('/api/queue/state')
-      if (res.ok) {
-        const data = await res.json()
-        setQueue({
-          currentToken: data.currentToken ?? 0,
-          waitingCount: data.waitingCount ?? 0,
-          lastUpdated: data.lastUpdated ?? new Date().toISOString(),
-        })
-      }
-    } catch {
-      // Use default state
-    }
-  }
+  useEffect(() => {
+    fetchQueueState()
+    const interval = setInterval(fetchQueueState, 10_000)
+    return () => clearInterval(interval)
+  }, [fetchQueueState])
 
   async function handleAction(action: 'next' | 'reset') {
+    if (!sb) return
     setLoading(true)
     setMessage(null)
-    try {
-      const res = await fetch('/api/queue', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action }),
-      })
-      const data = await res.json()
 
-      if (data.success) {
-        setQueue({
-          currentToken: data.data.currentToken,
-          waitingCount: data.data.waitingCount,
-          lastUpdated: data.data.lastUpdated,
-        })
-        setMessage(data.message)
+    try {
+      if (action === 'next') {
+        const newToken = queue.currentToken + 1
+        const newWaiting = Math.max(0, queue.waitingCount - 1)
+
+        const { error } = await sb
+          .from('queue_status')
+          .update({ current_token: newToken, waiting_count: newWaiting })
+          .eq('id', 1)
+
+        if (error) {
+          setMessage(`Error: ${error.message}`)
+        } else {
+          setQueue(prev => ({
+            ...prev,
+            currentToken: newToken,
+            waitingCount: newWaiting,
+            lastUpdated: new Date().toISOString(),
+          }))
+          setMessage(`Now serving Token #${newToken}`)
+        }
       } else {
-        setMessage(data.message || 'Action failed')
+        // Reset
+        const { error } = await sb
+          .from('queue_status')
+          .update({ current_token: 0, waiting_count: 0 })
+          .eq('id', 1)
+
+        if (error) {
+          setMessage(`Error: ${error.message}`)
+        } else {
+          setQueue({ currentToken: 0, waitingCount: 0, lastUpdated: new Date().toISOString() })
+          setMessage('Queue has been reset.')
+        }
       }
-    } catch {
-      setMessage('Network error. Please try again.')
+    } catch (err) {
+      setMessage('Action failed. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  const estimatedWait = queue.waitingCount * 15 // 15 min per patient
+  const estimatedWait = queue.waitingCount * 15
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-        Queue Management
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          Queue Management
+        </h2>
+        <button
+          onClick={fetchQueueState}
+          className="px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+        >
+          ↻ Refresh
+        </button>
+      </div>
 
       {/* Current Queue Status */}
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
