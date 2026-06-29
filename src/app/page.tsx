@@ -13,6 +13,7 @@ import { CostEstimator } from "@/components/sections/CostEstimator";
 import { SeasonalAlert } from "@/components/sections/SeasonalAlert";
 import { HealthTipsVideos } from "@/components/sections/HealthTipsVideos";
 import { Contact } from "@/components/sections/Contact";
+import ChatWidget from "@/components/chatbot/ChatWidget";
 import Footer from "@/components/layout/Footer";
 import AppointmentForm from "@/components/forms/AppointmentForm";
 
@@ -38,6 +39,7 @@ export default function HomePage() {
         <Contact />
         <Footer />
       </div>
+      <ChatWidget />
     </>
   );
 }
