@@ -85,7 +85,6 @@ export function LiveQueue() {
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
       if (!supabaseUrl || !supabaseKey) return null
 
-      // Use dynamic import to avoid bundling issues
       const { createClient } = await import('@supabase/supabase-js')
       const sb = createClient(supabaseUrl, supabaseKey)
 
@@ -96,10 +95,7 @@ export function LiveQueue() {
         .eq('id', 1)
         .single()
 
-      if (error || !state) {
-        // If table doesn't exist or can't connect, use localStorage counter
-        return joinQueueLocal()
-      }
+      if (error || !state) return null
 
       const newWaiting = (state.waiting_count || 0) + 1
       const assignedToken = (state.current_token || 0) + newWaiting
@@ -112,17 +108,8 @@ export function LiveQueue() {
 
       return assignedToken
     } catch {
-      return joinQueueLocal()
+      return null
     }
-  }
-
-  /** Last resort: local token counter using localStorage */
-  function joinQueueLocal(): number {
-    const stored = localStorage.getItem('queue_token_counter')
-    const current = stored ? parseInt(stored, 10) : 0
-    const newToken = current + 1
-    localStorage.setItem('queue_token_counter', newToken.toString())
-    return newToken
   }
 
   return (
