@@ -135,7 +135,7 @@ export default function AdminQueuePage() {
     }
   }
 
-  const estimatedWait = queue.waitingCount * 15
+  const estimatedWait = queue.waitingCount * 10
 
   return (
     <div className="space-y-6">

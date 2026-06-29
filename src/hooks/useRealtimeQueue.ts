@@ -31,7 +31,7 @@ interface QueueRealtimeState {
 }
 
 /** Average consultation time per patient in minutes */
-const MINUTES_PER_PATIENT = 15
+const MINUTES_PER_PATIENT = 10
 
 /** Operating hours: 09:00 - 18:00, Monday (1) through Saturday (6) */
 const OPERATING_START_HOUR = 9

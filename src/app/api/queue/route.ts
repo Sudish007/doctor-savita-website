@@ -244,7 +244,7 @@ async function handleJoinQueue(phone?: string, patientName?: string, patientId?:
     console.error('[Queue API] Failed to save subscription:', err)
   }
 
-  const estimatedWait = newWaitingCount * 15
+  const estimatedWait = newWaitingCount * 10
 
   return NextResponse.json({
     success: true,

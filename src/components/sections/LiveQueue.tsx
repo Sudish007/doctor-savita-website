@@ -296,7 +296,7 @@ export function LiveQueue() {
                       <p className="text-xs font-mono text-emerald-600/80 dark:text-emerald-400/80 mt-1">ID: {myPatientId}</p>
                     )}
                     <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 mt-1">
-                      Estimated wait: ~{(myToken - currentToken) * 15} min
+                      Estimated wait: ~{(myToken - currentToken) * 10} min
                     </p>
                   </motion.div>
                 ) : showTokenForm ? (
