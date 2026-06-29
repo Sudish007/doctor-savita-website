@@ -37,28 +37,44 @@ export function LiveQueue() {
   // Token booking state
   const [showTokenForm, setShowTokenForm] = useState(false)
   const [phone, setPhone] = useState('')
+  const [patientName, setPatientName] = useState('')
   const [isJoining, setIsJoining] = useState(false)
   const [myToken, setMyToken] = useState<number | null>(null)
+  const [myPatientId, setMyPatientId] = useState<string | null>(null)
   const [joinError, setJoinError] = useState<string | null>(null)
+
+  /** Generate a short unique patient ID like P-A3K7X */
+  function generatePatientId(): string {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+    let id = 'P-'
+    for (let i = 0; i < 5; i++) {
+      id += chars[Math.floor(Math.random() * chars.length)]
+    }
+    return id
+  }
 
   async function handleTakeToken() {
     setIsJoining(true)
     setJoinError(null)
+    const patientId = generatePatientId()
+
     try {
       const res = await fetch('/api/queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'join', phone: phone.trim() || undefined }),
+        body: JSON.stringify({ action: 'join', phone: phone.trim() || undefined, patientName: patientName.trim() || undefined, patientId }),
       })
       const data = await res.json()
       if (data.success) {
         setMyToken(data.data.assignedToken)
+        setMyPatientId(data.data.patientId || patientId)
         setShowTokenForm(false)
       } else {
         // If server API fails, try direct Supabase client approach
-        const directResult = await joinQueueDirect()
+        const directResult = await joinQueueDirect(patientId)
         if (directResult) {
           setMyToken(directResult)
+          setMyPatientId(patientId)
           setShowTokenForm(false)
         } else {
           setJoinError(data.message || 'Failed to join queue')
@@ -66,9 +82,10 @@ export function LiveQueue() {
       }
     } catch {
       // Try direct approach as fallback
-      const directResult = await joinQueueDirect()
+      const directResult = await joinQueueDirect(patientId)
       if (directResult) {
         setMyToken(directResult)
+        setMyPatientId(patientId)
         setShowTokenForm(false)
       } else {
         setJoinError('Network error. Please try again.')
@@ -79,7 +96,7 @@ export function LiveQueue() {
   }
 
   /** Fallback: join queue directly via Supabase client (RLS disabled) */
-  async function joinQueueDirect(): Promise<number | null> {
+  async function joinQueueDirect(patientId: string): Promise<number | null> {
     try {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -106,10 +123,20 @@ export function LiveQueue() {
         .update({ waiting_count: newWaiting })
         .eq('id', 1)
 
-      // Even if update fails, still return the token (read was successful)
       if (updateError) {
         console.warn('[Queue] Update failed:', updateError.message)
       }
+
+      // Save to queue_subscriptions with patient ID
+      await sb
+        .from('queue_subscriptions')
+        .insert({
+          phone_number: phone.trim() || 'N/A',
+          token_number: assignedToken,
+          patient_id: patientId,
+          patient_name: patientName.trim() || 'Walk-in',
+          notified: false,
+        })
 
       return assignedToken
     } catch {
@@ -262,6 +289,9 @@ export function LiveQueue() {
                   >
                     <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium mb-1">Your Token</p>
                     <p className="text-4xl font-bold text-emerald-600 dark:text-emerald-400">#{myToken}</p>
+                    {myPatientId && (
+                      <p className="text-xs font-mono text-emerald-600/80 dark:text-emerald-400/80 mt-1">ID: {myPatientId}</p>
+                    )}
                     <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 mt-1">
                       Estimated wait: ~{(myToken - currentToken) * 15} min
                     </p>
@@ -273,11 +303,19 @@ export function LiveQueue() {
                     className="space-y-3 max-w-sm mx-auto"
                   >
                     <p className="text-sm text-foreground-muted text-center">
-                      Enter your phone (optional) to get a WhatsApp alert when your turn is near:
+                      Enter your details to get a token:
                     </p>
                     <input
+                      type="text"
+                      placeholder="Your name"
+                      value={patientName}
+                      onChange={(e) => setPatientName(e.target.value)}
+                      maxLength={50}
+                      className="w-full px-4 py-2.5 rounded-xl text-sm bg-background-secondary text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                    <input
                       type="tel"
-                      placeholder="Phone number (optional)"
+                      placeholder="Phone number (optional, for WhatsApp alert)"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       maxLength={10}
@@ -342,12 +380,23 @@ export function LiveQueue() {
                   <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
                     <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium mb-1">Your Token (for next session)</p>
                     <p className="text-4xl font-bold text-emerald-600 dark:text-emerald-400">#{myToken}</p>
+                    {myPatientId && (
+                      <p className="text-xs font-mono text-emerald-600/80 dark:text-emerald-400/80 mt-1">ID: {myPatientId}</p>
+                    )}
                   </div>
                 ) : showTokenForm ? (
                   <div className="space-y-3 max-w-sm mx-auto">
                     <p className="text-sm text-foreground-muted text-center">
                       Book your spot for the next clinic session:
                     </p>
+                    <input
+                      type="text"
+                      placeholder="Your name"
+                      value={patientName}
+                      onChange={(e) => setPatientName(e.target.value)}
+                      maxLength={50}
+                      className="w-full px-4 py-2.5 rounded-xl text-sm bg-background-secondary text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
                     <input
                       type="tel"
                       placeholder="Phone number (optional, for alert)"

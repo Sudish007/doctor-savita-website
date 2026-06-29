@@ -9,6 +9,16 @@ interface QueueData {
   lastUpdated: string
 }
 
+interface QueuePatient {
+  id: string
+  patient_id: string
+  patient_name: string
+  phone_number: string
+  token_number: number
+  notified: boolean
+  created_at: string
+}
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 const sb = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
@@ -24,6 +34,7 @@ export default function AdminQueuePage() {
     waitingCount: 0,
     lastUpdated: new Date().toISOString(),
   })
+  const [patients, setPatients] = useState<QueuePatient[]>([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -42,6 +53,18 @@ export default function AdminQueuePage() {
           waitingCount: data.waiting_count ?? 0,
           lastUpdated: data.last_updated ?? new Date().toISOString(),
         })
+      }
+
+      // Fetch today's patients from queue_subscriptions
+      const today = new Date().toISOString().split('T')[0]
+      const { data: patientsData } = await sb
+        .from('queue_subscriptions')
+        .select('*')
+        .gte('created_at', `${today}T00:00:00`)
+        .order('token_number', { ascending: true })
+
+      if (patientsData) {
+        setPatients(patientsData as QueuePatient[])
       }
     } catch {
       // Fallback to API
@@ -180,6 +203,56 @@ export default function AdminQueuePage() {
           {message}
         </div>
       )}
+
+      {/* Today's Queue Patients */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Today&apos;s Queue ({patients.length} patients)
+          </h3>
+        </div>
+
+        {patients.length === 0 ? (
+          <div className="px-4 py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
+            No patients in queue today.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 dark:bg-gray-700/50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Token</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Patient ID</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Name</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Phone</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Time</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {patients.map((p) => (
+                  <tr key={p.id} className={`${p.token_number <= queue.currentToken ? 'bg-green-50 dark:bg-green-900/10' : ''}`}>
+                    <td className="px-4 py-3 font-bold text-primary">#{p.token_number}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-gray-600 dark:text-gray-300">{p.patient_id || '—'}</td>
+                    <td className="px-4 py-3 text-gray-900 dark:text-white font-medium">{p.patient_name || 'Walk-in'}</td>
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{p.phone_number}</td>
+                    <td className="px-4 py-3">
+                      {p.token_number <= queue.currentToken ? (
+                        <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Done</span>
+                      ) : p.token_number === queue.currentToken + 1 ? (
+                        <span className="px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">Next</span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">Waiting</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-gray-500">{new Date(p.created_at).toLocaleTimeString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
