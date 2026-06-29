@@ -103,7 +103,7 @@ export function LiveQueue() {
       // Update waiting count
       const { error: updateError } = await sb
         .from('queue_status')
-        .update({ waiting_count: newWaiting, last_updated: new Date().toISOString() })
+        .update({ waiting_count: newWaiting })
         .eq('id', 1)
 
       // Even if update fails, still return the token (read was successful)
