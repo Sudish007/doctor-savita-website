@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-
 /**
  * UPI QR Code component — generates QR code client-side using Canvas API.
  * No external library needed. Uses a minimal QR code generation algorithm.

@@ -291,40 +291,33 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
 
   /** Handle successful form submission — calls the API */
   async function onSubmitSuccess(data: AppointmentFormData) {
-    // This is now called from payment step
+    // No longer used directly — kept for safety
+  }
+
+  /** Confirm payment status and show confirmation */
+  async function confirmPayment(status: 'paid' | 'pay_at_clinic') {
     setIsSubmitting(true)
-
     try {
-      const response = await fetch('/api/appointment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-
-      const result = await response.json()
-
-      if (result.success) {
-        setSubmittedData(data)
-        setIsSubmitted(true)
-        setShowPayment(false)
-      } else {
-        setSubmittedData(data)
-        setIsSubmitted(true)
-        setShowPayment(false)
+      if (bookingId) {
+        await fetch('/api/appointment/payment', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookingId, paymentStatus: status }),
+        })
       }
     } catch {
-      setSubmittedData(data)
-      setIsSubmitted(true)
-      setShowPayment(false)
+      // Non-critical — appointment is already saved
     } finally {
       setIsSubmitting(false)
+      setSubmittedData(pendingData)
+      setIsSubmitted(true)
+      setShowPayment(false)
     }
   }
 
   /** Confirm appointment after payment */
   async function confirmAppointmentAfterPayment() {
-    if (!pendingData) return
-    await onSubmitSuccess(pendingData)
+    await confirmPayment('paid')
   }
 
   // UPI payment helpers
@@ -462,7 +455,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
                 {UPI_APPS.map((app) => (
                   <a
                     key={app.name}
-                    href={getUpiDeepLink(app.scheme)}
+                    href={getUpiLink(app.scheme)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex flex-col items-center gap-1 p-2 rounded-xl border border-border hover:border-primary/50 hover:shadow-md transition-all"
