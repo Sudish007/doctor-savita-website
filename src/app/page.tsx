@@ -10,6 +10,7 @@ import { RemedyOfTheDay } from "@/components/sections/RemedyOfTheDay";
 import { BodyMap } from "@/components/sections/BodyMap";
 import { LiveQueue } from "@/components/sections/LiveQueue";
 import { CostEstimator } from "@/components/sections/CostEstimator";
+import { Payment } from "@/components/sections/Payment";
 import { SeasonalAlert } from "@/components/sections/SeasonalAlert";
 import { HealthTipsVideos } from "@/components/sections/HealthTipsVideos";
 import { Contact } from "@/components/sections/Contact";
@@ -34,6 +35,7 @@ export default function HomePage() {
         <BodyMap />
         <LiveQueue />
         <CostEstimator />
+        <Payment />
         <HealthTipsVideos />
         <AppointmentForm />
         <Contact />
