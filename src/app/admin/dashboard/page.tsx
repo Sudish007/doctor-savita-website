@@ -28,6 +28,9 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     fetchAppointments()
+    // Auto-refresh every 30 seconds for near real-time updates
+    const interval = setInterval(fetchAppointments, 30_000)
+    return () => clearInterval(interval)
   }, [])
 
   async function fetchAppointments() {
