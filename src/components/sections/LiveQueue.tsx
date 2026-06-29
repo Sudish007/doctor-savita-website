@@ -282,6 +282,62 @@ export function LiveQueue() {
               <p className="mt-3 text-sm text-foreground-muted">
                 Operating hours: Mon–Sat, 9:00 AM – 6:00 PM IST
               </p>
+
+              {/* Take Token - available even when closed (for next day) */}
+              <div className="pt-6 border-t border-border-light mt-6">
+                {myToken ? (
+                  <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+                    <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium mb-1">Your Token (for next session)</p>
+                    <p className="text-4xl font-bold text-emerald-600 dark:text-emerald-400">#{myToken}</p>
+                  </div>
+                ) : showTokenForm ? (
+                  <div className="space-y-3 max-w-sm mx-auto">
+                    <p className="text-sm text-foreground-muted text-center">
+                      Book your spot for the next clinic session:
+                    </p>
+                    <input
+                      type="tel"
+                      placeholder="Phone number (optional, for alert)"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      maxLength={10}
+                      className="w-full px-4 py-2.5 rounded-xl text-sm bg-background-secondary text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                    {joinError && (
+                      <p className="text-xs text-red-500 text-center">{joinError}</p>
+                    )}
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setShowTokenForm(false)}
+                        className="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium border border-border text-foreground-muted hover:bg-muted transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleTakeToken}
+                        disabled={isJoining}
+                        className="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium bg-primary text-primary-foreground hover:bg-primary-hover disabled:opacity-60 transition-colors"
+                      >
+                        {isJoining ? 'Joining...' : 'Confirm'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <button
+                      onClick={() => setShowTokenForm(true)}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-base bg-primary text-primary-foreground hover:bg-primary-hover shadow-elevation-2 hover:shadow-elevation-3 transition-all touch-target"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M15 5v2" /><path d="M15 11v2" /><path d="M15 17v2" />
+                        <path d="M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" />
+                      </svg>
+                      Take Token
+                    </button>
+                    <p className="text-xs text-foreground-muted mt-2">Reserve your spot for the next clinic session</p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </motion.div>
