@@ -210,6 +210,10 @@ const config: Config = {
           "75%": { transform: "scale(1.1)" },
           "100%": { transform: "scale(1)" },
         },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "blob-float": "blob-float 20s ease-in-out infinite",
@@ -217,6 +221,7 @@ const config: Config = {
         shimmer: "shimmer 2s linear infinite",
         "fade-in-up": "fade-in-up 0.6s ease-out forwards",
         "icon-bounce": "icon-bounce 0.6s ease-out",
+        marquee: "marquee 40s linear infinite",
       },
 
       /* ---- Transition Duration ---- */
