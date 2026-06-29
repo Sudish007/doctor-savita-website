@@ -356,6 +356,47 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
   return (
     <section id="appointment" className="section-padding">
       <div className="container-content">
+        {/* Video Consultation CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="max-w-2xl mx-auto mb-8"
+        >
+          <a
+            href="/ask-dr-savita"
+            className="block glass-card p-5 md:p-6 border-2 border-primary/30 hover:border-primary transition-all duration-300 hover:shadow-elevation-3 group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <polygon points="23 7 16 12 23 17 23 7" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-heading font-bold text-foreground group-hover:text-primary transition-colors">
+                  {locale === 'en' ? '📹 Book Video Consultation' : locale === 'hi' ? '📹 वीडियो परामर्श बुक करें' : '📹 वीडियो परामर्श बुक करीं'}
+                </h3>
+                <p className="text-fluid-body-sm text-foreground-muted mt-0.5">
+                  {locale === 'en'
+                    ? 'Record a 2-min video describing your symptoms. Dr. Savita will respond with personalized advice.'
+                    : locale === 'hi'
+                    ? '2 मिनट का वीडियो रिकॉर्ड करें अपने लक्षणों के बारे में। डॉ. सविता व्यक्तिगत सलाह देंगी।'
+                    : '2 मिनट के वीडियो रिकॉर्ड करीं अपना लक्षणन के बारे में। डॉ. सविता जवाब देई।'}
+                </p>
+              </div>
+              <div className="flex-shrink-0 hidden sm:block">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary group-hover:translate-x-1 transition-transform">
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

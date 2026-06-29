@@ -228,12 +228,12 @@ export function Navigation() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="fixed inset-0 top-16 z-40 md:hidden"
           >
-            {/* Backdrop */}
+            {/* Backdrop - fully opaque to block content behind */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-background/80 backdrop-blur-md"
+              className="absolute inset-0 bg-background"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -243,7 +243,7 @@ export function Navigation() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2, delay: 0.05 }}
-              className="relative flex flex-col items-center justify-center gap-2 pt-8 pb-12 px-6"
+              className="relative flex flex-col items-center justify-center gap-2 pt-8 pb-12 px-6 bg-background"
             >
               {NAV_LINKS.map((link, index) => (
                 <motion.li

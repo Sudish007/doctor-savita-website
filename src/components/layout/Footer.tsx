@@ -21,6 +21,7 @@ const quickLinks = [
   { id: "testimonials", href: "#testimonials" },
   { id: "blog", href: "#blog" },
   { id: "appointment", href: "#appointment" },
+  { id: "videoConsultation", href: "/ask-dr-savita" },
   { id: "contact", href: "#contact" },
 ];
 
