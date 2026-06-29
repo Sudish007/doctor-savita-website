@@ -105,30 +105,22 @@ export function LiveQueue() {
       const { createClient } = await import('@supabase/supabase-js')
       const sb = createClient(supabaseUrl, supabaseKey)
 
-      // Fetch current state
-      const { data: state, error } = await sb
-        .from('queue_status')
-        .select('*')
-        .eq('id', 1)
-        .single()
+      // Count today's existing tokens to determine next token number
+      const today = new Date().toISOString().split('T')[0]
+      const { count, error: countError } = await sb
+        .from('queue_subscriptions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', `${today}T00:00:00`)
 
-      if (error || !state) return null
-
-      const newWaiting = (state.waiting_count || 0) + 1
-      const assignedToken = (state.current_token || 0) + newWaiting
-
-      // Update waiting count
-      const { error: updateError } = await sb
-        .from('queue_status')
-        .update({ waiting_count: newWaiting })
-        .eq('id', 1)
-
-      if (updateError) {
-        console.warn('[Queue] Update failed:', updateError.message)
+      if (countError) {
+        console.warn('[Queue] Count failed:', countError.message)
+        return null
       }
 
+      const assignedToken = (count || 0) + 1
+
       // Save to queue_subscriptions with patient ID
-      await sb
+      const { error: insertError } = await sb
         .from('queue_subscriptions')
         .insert({
           phone_number: phone.trim() || 'N/A',
@@ -137,6 +129,17 @@ export function LiveQueue() {
           patient_name: patientName.trim() || 'Walk-in',
           notified: false,
         })
+
+      if (insertError) {
+        console.warn('[Queue] Insert failed:', insertError.message)
+        return null
+      }
+
+      // Try to update waiting_count (non-critical)
+      await sb
+        .from('queue_status')
+        .update({ waiting_count: assignedToken })
+        .eq('id', 1)
 
       return assignedToken
     } catch {
