@@ -22,9 +22,11 @@ export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, input, handleInputChange, handleSubmit, append, isLoading } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, append, status } = useChat({
     api: '/api/chatbot',
   });
+
+  const isLoading = status === 'streaming' || status === 'submitted';
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -174,7 +176,7 @@ export default function ChatWidget() {
                 />
                 <button
                   type="submit"
-                  disabled={isLoading || !input.trim()}
+                  disabled={isLoading || !input?.trim()}
                   className="w-9 h-9 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)]
                     flex items-center justify-center
                     disabled:opacity-50 disabled:cursor-not-allowed
