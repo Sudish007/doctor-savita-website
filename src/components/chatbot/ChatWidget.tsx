@@ -22,11 +22,12 @@ export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, input, handleInputChange, handleSubmit, append, status } = useChat({
+  const { messages, input, setInput, handleSubmit, append, status } = useChat({
     api: '/api/chatbot',
   });
 
   const isLoading = status === 'streaming' || status === 'submitted';
+  const inputValue = input ?? '';
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -164,8 +165,8 @@ export default function ChatWidget() {
               <div className="flex items-center gap-2">
                 <input
                   type="text"
-                  value={input}
-                  onChange={handleInputChange}
+                  value={inputValue}
+                  onChange={(e) => setInput(e.target.value)}
                   placeholder="Describe your symptoms..."
                   className="flex-1 px-4 py-2.5 text-sm rounded-full
                     bg-[var(--background-secondary)] border border-[var(--border)]
@@ -176,7 +177,7 @@ export default function ChatWidget() {
                 />
                 <button
                   type="submit"
-                  disabled={isLoading || !input?.trim()}
+                  disabled={isLoading || !inputValue.trim()}
                   className="w-9 h-9 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)]
                     flex items-center justify-center
                     disabled:opacity-50 disabled:cursor-not-allowed
