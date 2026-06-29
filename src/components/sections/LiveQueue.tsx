@@ -101,10 +101,15 @@ export function LiveQueue() {
       const assignedToken = (state.current_token || 0) + newWaiting
 
       // Update waiting count
-      await sb
+      const { error: updateError } = await sb
         .from('queue_status')
         .update({ waiting_count: newWaiting, last_updated: new Date().toISOString() })
         .eq('id', 1)
+
+      // Even if update fails, still return the token (read was successful)
+      if (updateError) {
+        console.warn('[Queue] Update failed:', updateError.message)
+      }
 
       return assignedToken
     } catch {
