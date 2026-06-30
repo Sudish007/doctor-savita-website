@@ -187,8 +187,7 @@ export function Navigation() {
         <div className="flex items-center gap-1">
           {/* Appointment button - always visible */}
           <a
-            href="#appointment"
-            onClick={(e) => scrollToSection(e, "appointment")}
+            href="/book"
             className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:bg-primary-hover transition-colors shadow-sm"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
