@@ -187,7 +187,7 @@ const PRICING_CARDS: PricingCard[] = [
   {
     id: "video",
     nameKey: "videoConsultation",
-    price: 150,
+    price: 100,
     durationText: "20 min",
     durationTextHi: "20 मिनट",
     includesKeys: ["videoCall20", "quickQuery"],

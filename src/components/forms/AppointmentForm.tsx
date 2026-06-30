@@ -388,7 +388,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
     { id: 'initial', label: 'Initial Consultation', amountInPerson: 300, amountOnline: 200 },
     { id: 'followup', label: 'Follow-up Visit', amountInPerson: 100, amountOnline: 100 },
     { id: 'online30', label: 'Online Consultation (30 min)', amountInPerson: 200, amountOnline: 200 },
-    { id: 'video20', label: 'Video Consultation (20 min)', amountInPerson: 150, amountOnline: 150 },
+    { id: 'video20', label: 'Video Consultation (20 min)', amountInPerson: 100, amountOnline: 100 },
     { id: 'monthlyKit', label: 'Monthly Remedy Kit', amountInPerson: 200, amountOnline: 200 },
   ]
 
