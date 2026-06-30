@@ -134,11 +134,15 @@ export default function ChatWidget() {
   // Auto-scroll handled below
 
   const handleBookAppointment = (service?: string) => {
-    const params = new URLSearchParams();
-    if (service) {
-      params.set('reason', service);
+    // Scroll to appointment section on the same page (it's a SPA, not a separate route)
+    const section = document.getElementById('appointment');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If on a different page, navigate to home with hash
+      window.location.href = `/#appointment`;
     }
-    window.location.href = `/appointment${params.toString() ? `?${params.toString()}` : ''}`;
+    setIsOpen(false); // Close chatbot
   };
 
   // Detect if a service was identified in the last assistant message
