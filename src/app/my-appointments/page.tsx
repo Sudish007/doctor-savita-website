@@ -84,7 +84,7 @@ export default function MyAppointmentsPage() {
     <>
       <Navigation />
       <div className="pt-20 pb-12 min-h-screen bg-background">
-        <div className="container-content max-w-3xl mx-auto">
+        <div className="container-content max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-foreground mb-2">📋 My Appointments</h1>
