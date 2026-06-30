@@ -24,7 +24,7 @@ const NAV_LINKS = [
   { id: "credentials", href: "#credentials" },
   { id: "testimonials", href: "#testimonials" },
   { id: "blog", href: "#blog" },
-  { id: "live-queue", href: "#live-queue" },
+  { id: "live-queue", href: "/token" },
   { id: "appointment", href: "#appointment" },
   { id: "contact", href: "#contact" },
 ];
@@ -107,10 +107,19 @@ export function Navigation() {
     };
   }, [isMobileMenuOpen]);
 
-  // Smooth scroll to section
+  // Smooth scroll to section or navigate to page
   const scrollToSection = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
       e.preventDefault();
+      const href = e.currentTarget.getAttribute('href') || '';
+      
+      // If it's a full page link (starts with /), navigate
+      if (href.startsWith('/')) {
+        window.location.href = href;
+        setIsMobileMenuOpen(false);
+        return;
+      }
+      
       const section = document.getElementById(sectionId);
       if (section) {
         section.scrollIntoView({ behavior: "smooth" });
