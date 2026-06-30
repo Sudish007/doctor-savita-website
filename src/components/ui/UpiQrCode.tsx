@@ -1,11 +1,8 @@
 'use client'
 
 /**
- * UPI QR Code component — generates QR code client-side using Canvas API.
- * No external library needed. Uses a minimal QR code generation algorithm.
- * 
- * For simplicity and reliability, we encode the UPI URI into a QR using
- * a Google Charts API URL (lightweight, no JS dependency, works everywhere).
+ * UPI QR Code component — uses the actual QR code image from Dr. Savita's UPI account.
+ * Static image stored locally — instant load, no external API calls.
  */
 
 interface UpiQrCodeProps {
@@ -16,17 +13,12 @@ interface UpiQrCodeProps {
   note?: string
 }
 
-export function UpiQrCode({ upiId, payeeName, amount, size = 220, note = 'Consultation Fee' }: UpiQrCodeProps) {
-  const upiUri = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`
-  
-  // Use Google Charts QR API — lightweight, no bundle size, works on all devices
-  const qrUrl = `https://chart.googleapis.com/chart?chs=${size}x${size}&cht=qr&chl=${encodeURIComponent(upiUri)}&choe=UTF-8&chld=M|2`
-
+export function UpiQrCode({ payeeName, amount, size = 220 }: UpiQrCodeProps) {
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
         <img
-          src={qrUrl}
+          src="/images/upi-qr.jpeg"
           alt={`UPI QR Code - Pay ₹${amount} to ${payeeName}`}
           width={size}
           height={size}
