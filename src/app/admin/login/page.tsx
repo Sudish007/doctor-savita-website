@@ -31,6 +31,8 @@ export default function AdminLoginPage() {
     try {
       // 1. Check master password first
       if (password === ADMIN_PASSWORD) {
+        document.cookie = `admin_username=admin;path=/;max-age=86400`
+        document.cookie = `admin_role=admin;path=/;max-age=86400`
         loginSuccess()
         return
       }
@@ -44,7 +46,7 @@ export default function AdminLoginPage() {
           .single()
 
         if (!dbError && user && user.password === password) {
-          // Store role in cookie for access control
+          document.cookie = `admin_username=${user.username};path=/;max-age=86400`
           document.cookie = `admin_role=${user.role};path=/;max-age=86400`
           loginSuccess()
           return
