@@ -21,7 +21,7 @@ export function LiveQueue() {
 
   return (
     <section id="live-queue" className="py-section" aria-label="Live queue status">
-      <div className="container-content max-w-2xl mx-auto">
+      <div className="container-content max-w-2xl lg:max-w-3xl mx-auto">
         <motion.h2
           className="text-fluid-h3 font-heading font-bold text-foreground text-center mb-8"
           initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}

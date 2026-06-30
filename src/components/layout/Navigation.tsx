@@ -18,15 +18,15 @@ import { LanguageToggle } from "./LanguageToggle";
  */
 
 const NAV_LINKS = [
-  { id: "home", href: "#home" },
-  { id: "about", href: "#about" },
-  { id: "services", href: "#services" },
-  { id: "credentials", href: "#credentials" },
-  { id: "testimonials", href: "#testimonials" },
+  { id: "home", href: "/" },
+  { id: "about", href: "/about" },
+  { id: "services", href: "/services" },
+  { id: "credentials", href: "/credentials" },
+  { id: "testimonials", href: "/testimonials" },
   { id: "blog", href: "/blog" },
   { id: "live-queue", href: "/token" },
   { id: "appointment", href: "/book" },
-  { id: "contact", href: "#contact" },
+  { id: "contact", href: "/contact" },
 ];
 
 export function Navigation() {

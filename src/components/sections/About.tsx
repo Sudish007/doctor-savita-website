@@ -134,7 +134,7 @@ export function About() {
         {/* Section Title */}
         <motion.h2
           id="about-heading"
-          className="text-fluid-h2 font-heading text-center mb-12"
+          className="text-fluid-h2 font-heading text-center mb-6 md:mb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
@@ -145,7 +145,7 @@ export function About() {
 
         {/* Main Content Grid: Photo + Bio */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-16"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start mb-8 md:mb-10"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"

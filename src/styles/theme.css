@@ -99,8 +99,8 @@
   --font-size-caption: clamp(0.75rem, 0.85rem, 0.875rem);
 
   /* ---- Fluid Spacing ---- */
-  --spacing-section: clamp(2rem, 5vw, 6rem);
-  --spacing-section-sm: clamp(1.5rem, 3vw, 4rem);
+  --spacing-section: clamp(2rem, 4vw, 3.5rem);
+  --spacing-section-sm: clamp(1.25rem, 2.5vw, 2.5rem);
   --spacing-container: clamp(1rem, 3vw, 2rem);
 
   /* ---- Letter Spacing ---- */

@@ -148,8 +148,8 @@ const config: Config = {
 
       /* ---- Fluid Spacing ---- */
       spacing: {
-        section: "clamp(2rem, 5vw, 6rem)",
-        "section-sm": "clamp(1.5rem, 3vw, 4rem)",
+        section: "clamp(2rem, 4vw, 3.5rem)",
+        "section-sm": "clamp(1.25rem, 2.5vw, 2.5rem)",
         container: "clamp(1rem, 3vw, 2rem)",
       },
 
