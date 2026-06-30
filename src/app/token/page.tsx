@@ -45,7 +45,7 @@ export default function TokenPage() {
       link.click()
     } catch {
       // Fallback: copy text info
-      const text = `🎟️ Token #${myToken}\nID: ${myPatientId}\nName: ${patientName || 'Walk-in'}\nPhone: ${phone || 'N/A'}\nDate: ${new Date().toLocaleDateString()}\n📍 Saubhagya Clinic, Village Pipra, Siwan`
+      const text = `🎟️ Token #${myToken}\nID: ${myPatientId}\nName: ${patientName || 'Walk-in'}\nPhone: ${phone || 'N/A'}\nDate: ${new Date().toLocaleDateString()}\n📍 Saubhagya Multispeciality Clinic, Village Pipra, Siwan`
       navigator.clipboard.writeText(text)
       alert('Ticket info copied! (Image download requires html2canvas)')
     }
@@ -116,7 +116,7 @@ export default function TokenPage() {
             🎟️ Take Your Token
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
-            Saubhagya Clinic — Dr. Savita Kumari
+            Saubhagya Multispeciality Clinic — Dr. Savita Kumari
           </p>
         </div>
 
@@ -131,7 +131,7 @@ export default function TokenPage() {
             <div id="token-ticket" className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border-2 border-emerald-300 dark:border-emerald-700">
               {/* Ticket Header - Clinic Name */}
               <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 text-center">
-                <p className="text-emerald-100 text-xs font-medium uppercase tracking-wider">Saubhagya Clinic</p>
+                <p className="text-emerald-100 text-xs font-medium uppercase tracking-wider">Saubhagya Multispeciality Clinic</p>
                 <p className="text-white font-bold text-lg">Dr. Savita Kumari</p>
                 <p className="text-emerald-200 text-xs">BHMS | AYUSH Dept., Govt. of Bihar</p>
               </div>
