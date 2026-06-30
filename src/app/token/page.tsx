@@ -31,6 +31,26 @@ export default function TokenPage() {
   const [myPatientId, setMyPatientId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  /** Download ticket as image using html2canvas-like approach via Canvas API */
+  async function downloadTicket() {
+    const ticket = document.getElementById('token-ticket')
+    if (!ticket) return
+    try {
+      // Use html2canvas dynamic import
+      const html2canvas = (await import('html2canvas')).default
+      const canvas = await html2canvas(ticket, { scale: 2, backgroundColor: '#ffffff' })
+      const link = document.createElement('a')
+      link.download = `token-${myToken}-${myPatientId || 'ticket'}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+    } catch {
+      // Fallback: copy text info
+      const text = `🎟️ Token #${myToken}\nID: ${myPatientId}\nName: ${patientName || 'Walk-in'}\nPhone: ${phone || 'N/A'}\nDate: ${new Date().toLocaleDateString()}\n📍 Saubhagya Clinic, Village Pipra, Siwan`
+      navigator.clipboard.writeText(text)
+      alert('Ticket info copied! (Image download requires html2canvas)')
+    }
+  }
+
   async function handleTakeToken() {
     setIsJoining(true)
     setError(null)
@@ -108,7 +128,7 @@ export default function TokenPage() {
             className="relative overflow-hidden"
           >
             {/* Ticket Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-emerald-200 dark:border-emerald-800">
+            <div id="token-ticket" className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border-2 border-emerald-300 dark:border-emerald-700">
               {/* Ticket Header - Clinic Name */}
               <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 text-center">
                 <p className="text-emerald-100 text-xs font-medium uppercase tracking-wider">Saubhagya Clinic</p>
@@ -168,11 +188,17 @@ export default function TokenPage() {
 
             {/* Action Buttons */}
             <div className="mt-6 flex gap-3">
+              <button
+                onClick={downloadTicket}
+                className="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center justify-center gap-1.5"
+              >
+                📥 Download
+              </button>
               <a
                 href="/"
                 className="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center"
               >
-                Go to Website
+                Website
               </a>
               <button
                 onClick={() => { setMyToken(null); setMyPatientId(null); setPatientName(''); setPhone('') }}

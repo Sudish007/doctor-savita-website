@@ -19,10 +19,8 @@ export function WhatsAppButton() {
   if (pathname?.startsWith('/admin')) return null
 
   function scrollToAppointment() {
-    const section = document.getElementById('appointment')
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' })
-    }
+    // Navigate to /book page
+    window.location.href = '/book'
   }
 
   return (
