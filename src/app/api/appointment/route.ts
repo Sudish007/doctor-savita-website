@@ -39,6 +39,9 @@ export async function POST(request: Request) {
 
     const formData = validation.data;
 
+    // Extract payment status if provided
+    const paymentStatus = body.paymentStatus || (formData.consultationType === 'in-person' ? 'pay_at_clinic' : 'pending');
+
     // 4. Store in Supabase appointments table
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: appointment, error: dbError } = await (supabaseAdmin as any)
@@ -52,7 +55,7 @@ export async function POST(request: Request) {
         consultation_type: formData.consultationType,
         reason_for_visit: formData.reasonForVisit,
         status: 'pending',
-        payment_status: formData.consultationType === 'in-person' ? 'pay_at_clinic' : 'pending',
+        payment_status: paymentStatus,
         whatsapp_sent: false,
       })
       .select('id')

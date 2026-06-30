@@ -150,7 +150,6 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
   const [pendingData, setPendingData] = useState<AppointmentFormData | null>(null)
   const [bookingId, setBookingId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
-  const [savingAppointment, setSavingAppointment] = useState(false)
 
   const labels = LABELS[locale]
   const messages = VALIDATION_MESSAGES[locale]
@@ -235,30 +234,30 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
     }
 
     setFieldErrors({})
-    // Save appointment immediately as pending, then show payment
-    saveAndShowPayment(result.data as AppointmentFormData)
+    const validData = result.data as AppointmentFormData
+    // Show payment step INSTANTLY (no waiting)
+    setPendingData(validData)
+    setShowPayment(true)
+    // Save appointment in background (non-blocking)
+    saveAppointmentInBackground(validData)
   }
 
-  /** Save appointment to Supabase immediately (status: pending), then show payment step */
-  async function saveAndShowPayment(data: AppointmentFormData) {
-    setSavingAppointment(true)
-    try {
-      const response = await fetch('/api/appointment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+  /** Save appointment to Supabase in the background — does NOT block UI */
+  function saveAppointmentInBackground(data: AppointmentFormData) {
+    fetch('/api/appointment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success && result.bookingId) {
+          setBookingId(result.bookingId)
+        }
       })
-      const result = await response.json()
-      if (result.success && result.bookingId) {
-        setBookingId(result.bookingId)
-      }
-    } catch {
-      // Even if save fails, show payment step — user can still pay
-    } finally {
-      setSavingAppointment(false)
-      setPendingData(data)
-      setShowPayment(true)
-    }
+      .catch(() => {
+        // Silent fail — appointment will be saved on confirm
+      })
   }
 
   /** Map Zod error to localized validation message */
@@ -294,19 +293,32 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
     // No longer used directly — kept for safety
   }
 
-  /** Confirm payment status and show confirmation */
+  /** Confirm payment status and save appointment to Supabase */
   async function confirmPayment(status: 'paid' | 'pay_at_clinic') {
+    if (!pendingData) return
     setIsSubmitting(true)
     try {
       if (bookingId) {
+        // Appointment already saved — just update payment status
         await fetch('/api/appointment/payment', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ bookingId, paymentStatus: status }),
         })
+      } else {
+        // Appointment wasn't saved yet (background save failed) — save now with payment status
+        const response = await fetch('/api/appointment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...pendingData, paymentStatus: status }),
+        })
+        const result = await response.json()
+        if (result.success && result.bookingId) {
+          setBookingId(result.bookingId)
+        }
       }
     } catch {
-      // Non-critical — appointment is already saved
+      // Non-critical
     } finally {
       setIsSubmitting(false)
       setSubmittedData(pendingData)
