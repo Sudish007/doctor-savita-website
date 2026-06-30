@@ -438,7 +438,7 @@ export function CostEstimator() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="glass-card p-6 md:p-8 rounded-2xl max-w-2xl mx-auto"
+          className="glass-card p-6 md:p-8 rounded-2xl max-w-3xl lg:max-w-4xl mx-auto"
         >
           {/* Calculator Header */}
           <div className="flex items-center gap-3 mb-6">
