@@ -12,11 +12,8 @@ import { usePathname, useRouter } from 'next/navigation'
 type AdminRole = 'admin' | 'staff' | 'viewer'
 
 // Pages accessible by role
-// admin: full access to everything
-// staff: manage queue and view appointments/contacts (operational)
-// viewer: read-only dashboard and contacts only (no queue management, no videos, no users)
 const ROLE_ACCESS: Record<AdminRole, string[]> = {
-  admin: ['dashboard', 'contacts', 'queue', 'status', 'videos', 'timelines', 'users'],
+  admin: ['dashboard', 'contacts', 'queue', 'status', 'videos', 'timelines', 'users', 'blogs', 'settings'],
   staff: ['dashboard', 'contacts', 'queue', 'status'],
   viewer: ['dashboard', 'contacts'],
 }
@@ -77,6 +74,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { id: 'videos', label: 'Videos', href: '/admin/videos' },
     { id: 'timelines', label: 'Timelines', href: '/admin/timelines' },
     { id: 'users', label: 'Users', href: '/admin/users' },
+    { id: 'blogs', label: 'Blogs', href: '/admin/blogs' },
+    { id: 'settings', label: 'Settings', href: '/admin/settings' },
   ]
 
   // Filter nav links based on role

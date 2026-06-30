@@ -22,6 +22,7 @@ const quickLinks = [
   { id: "blog", href: "#blog" },
   { id: "appointment", href: "#appointment" },
   { id: "videoConsultation", href: "/ask-dr-savita" },
+  { id: "myAppointments", href: "/my-appointments" },
   { id: "contact", href: "#contact" },
 ];
 

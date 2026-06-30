@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { TestimonialCarousel } from "@/components/ui/TestimonialCarousel";
 import type { Testimonial } from "@/types";
 
@@ -271,6 +272,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function Testimonials() {
+  const t = useTranslations('testimonials');
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const prefersReducedMotion = useReducedMotion();
@@ -299,7 +301,7 @@ export function Testimonials() {
             id="testimonials-title"
             className="text-fluid-h2 font-heading text-foreground mb-4"
           >
-            What Our Patients Say
+            {t('title')}
           </h2>
           <p className="text-foreground-secondary max-w-2xl mx-auto text-fluid-body-sm mb-6">
             Real stories from patients who found relief through homeopathic
