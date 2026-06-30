@@ -133,33 +133,31 @@ export default function TokenPage() {
             {/* Ticket Card */}
             <div id="token-ticket" className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border-2 border-emerald-300 dark:border-emerald-700">
               {/* Ticket Header - Clinic Name */}
-              <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 text-center">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-5 text-center">
                 <p className="text-emerald-100 text-xs font-medium uppercase tracking-wider">Saubhagya Multispeciality Clinic</p>
-                <p className="text-white font-bold text-lg">Dr. Savita Kumari (BHMS)</p>
-                <p className="text-emerald-200 text-xs">Medical Officer, AYUSH Dept., Govt. of Bihar</p>
+                <p className="text-white font-bold text-lg mt-1">Dr. Savita Kumari (BHMS)</p>
+                <p className="text-emerald-200 text-xs mt-0.5">Medical Officer, AYUSH Dept., Govt. of Bihar</p>
               </div>
 
-              {/* Perforated line effect */}
-              <div className="relative h-4">
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-full"></div>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-8 h-8 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-full"></div>
-                <div className="absolute inset-x-4 top-1/2 border-t-2 border-dashed border-gray-200 dark:border-gray-600"></div>
+              {/* Dashed separator */}
+              <div className="px-4 py-2">
+                <div className="border-t-2 border-dashed border-gray-200 dark:border-gray-600"></div>
               </div>
 
               {/* Token Number - Large Center */}
-              <div className="text-center py-6 px-6">
+              <div className="text-center py-4 px-6">
                 <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">Token Number</p>
-                <p className="text-7xl font-black text-emerald-600 dark:text-emerald-400 my-2">#{myToken}</p>
-                <div className="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-mono font-medium">
+                <p className="text-6xl font-black text-emerald-600 dark:text-emerald-400 mt-2 mb-3">#{myToken}</p>
+                <div className="inline-block px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm font-mono font-medium">
                   {myPatientId}
                 </div>
               </div>
 
               {/* Patient Details Grid */}
-              <div className="px-6 pb-4 grid grid-cols-2 gap-3">
+              <div className="px-6 pb-5 grid grid-cols-2 gap-3">
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
                   <p className="text-[10px] text-gray-400 uppercase font-medium">Patient Name</p>
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{patientName || 'Walk-in'}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{patientName || 'Walk-in'}</p>
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
                   <p className="text-[10px] text-gray-400 uppercase font-medium">Phone</p>
@@ -175,11 +173,9 @@ export default function TokenPage() {
                 </div>
               </div>
 
-              {/* Perforated line effect */}
-              <div className="relative h-4">
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-full"></div>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-8 h-8 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-full"></div>
-                <div className="absolute inset-x-4 top-1/2 border-t-2 border-dashed border-gray-200 dark:border-gray-600"></div>
+              {/* Dashed separator */}
+              <div className="px-4 py-1">
+                <div className="border-t-2 border-dashed border-gray-200 dark:border-gray-600"></div>
               </div>
 
               {/* Footer - Clinic Address */}
