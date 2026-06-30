@@ -12,10 +12,13 @@ import { usePathname, useRouter } from 'next/navigation'
 type AdminRole = 'admin' | 'staff' | 'viewer'
 
 // Pages accessible by role
+// admin: full access to everything
+// staff: manage queue and view appointments/contacts (operational)
+// viewer: read-only dashboard and contacts only (no queue management, no videos, no users)
 const ROLE_ACCESS: Record<AdminRole, string[]> = {
   admin: ['dashboard', 'contacts', 'queue', 'status', 'videos', 'timelines', 'users'],
   staff: ['dashboard', 'contacts', 'queue', 'status'],
-  viewer: ['dashboard', 'contacts', 'queue', 'status', 'videos', 'timelines'],
+  viewer: ['dashboard', 'contacts'],
 }
 
 function getCookie(name: string): string | null {
@@ -85,7 +88,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <header className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Dr. Savita — Admin
+            <a href="/" className="hover:text-green-600 transition-colors" title="Go to main website">
+              Dr. Savita — Admin
+            </a>
           </h1>
           <nav className="flex items-center gap-3 text-sm flex-wrap">
             {visibleLinks.map(link => (
@@ -101,6 +106,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {link.label}
               </a>
             ))}
+            <span className="w-px h-5 bg-gray-300 dark:bg-gray-600 mx-1"></span>
+            {/* View main site link */}
+            <a href="/" className="text-xs text-gray-500 hover:text-green-600 transition-colors" target="_blank" rel="noopener noreferrer">
+              🌐 View Site
+            </a>
             <span className="w-px h-5 bg-gray-300 dark:bg-gray-600 mx-1"></span>
             {/* Logged-in user display */}
             <span className="text-xs text-gray-500 dark:text-gray-400">
