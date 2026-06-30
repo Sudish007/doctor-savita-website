@@ -150,6 +150,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
   const [pendingData, setPendingData] = useState<AppointmentFormData | null>(null)
   const [bookingId, setBookingId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [confirmedPaymentMode, setConfirmedPaymentMode] = useState<'paid' | 'pay_at_clinic' | null>(null)
 
   const labels = LABELS[locale]
   const messages = VALIDATION_MESSAGES[locale]
@@ -297,6 +298,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
   async function confirmPayment(status: 'paid' | 'pay_at_clinic') {
     if (!pendingData) return
     setIsSubmitting(true)
+    setConfirmedPaymentMode(status)
     try {
       if (bookingId) {
         // Appointment already saved — just update payment status
@@ -606,6 +608,16 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
                 }
               />
               <SummaryRow label={labels.reason} value={submittedData.reasonForVisit} />
+              {confirmedPaymentMode && (
+                <SummaryRow
+                  label={locale === 'en' ? 'Payment' : 'भुगतान'}
+                  value={
+                    confirmedPaymentMode === 'paid'
+                      ? (locale === 'en' ? '✓ Paid via UPI' : '✓ UPI से भुगतान किया')
+                      : (locale === 'en' ? '🏥 Pay at Clinic (Cash/UPI)' : '🏥 क्लिनिक पर भुगतान (नकद/UPI)')
+                  }
+                />
+              )}
             </div>
 
             <button
