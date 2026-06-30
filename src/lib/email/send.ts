@@ -8,7 +8,7 @@ import { Resend } from 'resend'
  * Sign up at https://resend.com
  */
 
-const resend = new Resend(process.env.RESEND_API_KEY || 're_9VjQe1RX_8tZYhnfmjRHKa9dfMaLB3TeP')
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 const FROM_EMAIL = 'Dr. Savita Clinic <onboarding@resend.dev>'
 const DOCTOR_EMAIL = 'sudishdreams@gmail.com'
@@ -30,7 +30,7 @@ export async function sendPatientConfirmationEmail(
   patientEmail: string,
   data: AppointmentEmailData
 ): Promise<boolean> {
-  // resend always available
+  if (!resend) return false
 
   try {
     await resend.emails.send({
@@ -72,7 +72,7 @@ export async function sendPatientConfirmationEmail(
  * Send new appointment notification to doctor
  */
 export async function sendDoctorNotificationEmail(data: AppointmentEmailData): Promise<boolean> {
-  // resend always available
+  if (!resend) return false
 
   try {
     await resend.emails.send({
@@ -111,7 +111,7 @@ export async function sendDoctorNotificationEmail(data: AppointmentEmailData): P
  * Send contact form inquiry notification to doctor
  */
 export async function sendContactInquiryEmail(name: string, email: string, message: string): Promise<boolean> {
-  // resend always available
+  if (!resend) return false
 
   try {
     await resend.emails.send({
