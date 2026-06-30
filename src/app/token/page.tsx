@@ -1,0 +1,190 @@
+'use client'
+
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { createClient } from '@supabase/supabase-js'
+
+/**
+ * Standalone Token Page — /token
+ * Patients can take a token for the queue from this dedicated page.
+ * Shows queue status + take token form + token confirmation.
+ */
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const sb = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
+
+function generatePatientId(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let id = 'P-'
+  for (let i = 0; i < 5; i++) {
+    id += chars[Math.floor(Math.random() * chars.length)]
+  }
+  return id
+}
+
+export default function TokenPage() {
+  const [patientName, setPatientName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [isJoining, setIsJoining] = useState(false)
+  const [myToken, setMyToken] = useState<number | null>(null)
+  const [myPatientId, setMyPatientId] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleTakeToken() {
+    setIsJoining(true)
+    setError(null)
+    const patientId = generatePatientId()
+
+    try {
+      if (!sb) {
+        setError('Service unavailable. Please try again.')
+        return
+      }
+
+      // Count today's tokens
+      const today = new Date().toISOString().split('T')[0]
+      const { count } = await sb
+        .from('queue_subscriptions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', `${today}T00:00:00`)
+
+      const assignedToken = (count || 0) + 1
+
+      // Save to queue_subscriptions
+      const { error: insertError } = await sb
+        .from('queue_subscriptions')
+        .insert({
+          phone_number: phone.trim() || 'N/A',
+          token_number: assignedToken,
+          patient_id: patientId,
+          patient_name: patientName.trim() || 'Walk-in',
+          notified: false,
+        })
+
+      if (insertError) {
+        setError('Failed to get token. Please try again.')
+        return
+      }
+
+      // Update queue_status waiting count
+      await sb
+        .from('queue_status')
+        .update({ waiting_count: assignedToken })
+        .eq('id', 1)
+
+      setMyToken(assignedToken)
+      setMyPatientId(patientId)
+    } catch {
+      setError('Network error. Please try again.')
+    } finally {
+      setIsJoining(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md"
+      >
+        {/* Header */}
+        <div className="text-center mb-8">
+          <a href="/" className="text-sm text-emerald-600 hover:underline mb-2 inline-block">← Back to website</a>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            🎟️ Take Your Token
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+            Saubhagya Clinic — Dr. Savita Kumari
+          </p>
+        </div>
+
+        {myToken ? (
+          /* Token Assigned */
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center border border-emerald-200 dark:border-emerald-800"
+          >
+            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+              <span className="text-4xl">🎫</span>
+            </div>
+            <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium mb-1">Your Token Number</p>
+            <p className="text-6xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">#{myToken}</p>
+            {myPatientId && (
+              <p className="text-xs font-mono text-gray-500 mb-4">ID: {myPatientId}</p>
+            )}
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-300 space-y-1">
+              <p>⏱️ Estimated wait: <strong>~{myToken * 10} min</strong></p>
+              <p>📍 Saubhagya Clinic, Village Pipra, Siwan</p>
+              {patientName && <p>👤 {patientName}</p>}
+            </div>
+            <div className="mt-6 flex gap-3">
+              <a
+                href="/"
+                className="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center"
+              >
+                Go to Website
+              </a>
+              <button
+                onClick={() => { setMyToken(null); setMyPatientId(null); setPatientName(''); setPhone('') }}
+                className="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+              >
+                New Token
+              </button>
+            </div>
+          </motion.div>
+        ) : (
+          /* Take Token Form */
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  value={patientName}
+                  onChange={(e) => setPatientName(e.target.value)}
+                  maxLength={50}
+                  className="w-full px-4 py-3 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Phone Number <span className="text-gray-400">(optional)</span>
+                </label>
+                <input
+                  type="tel"
+                  placeholder="For WhatsApp notification"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  maxLength={10}
+                  className="w-full px-4 py-3 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              {error && (
+                <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg px-3 py-2">{error}</p>
+              )}
+
+              <button
+                onClick={handleTakeToken}
+                disabled={isJoining}
+                className="w-full py-3.5 px-6 rounded-xl font-medium text-base bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors shadow-lg"
+              >
+                {isJoining ? '⏳ Getting Token...' : '🎟️ Take Token'}
+              </button>
+
+              <p className="text-xs text-gray-400 text-center">
+                Token is valid for today&apos;s clinic session only
+              </p>
+            </div>
+          </div>
+        )}
+      </motion.div>
+    </div>
+  )
+}
