@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
 
 interface Appointment {
   id: string
@@ -11,8 +12,14 @@ interface Appointment {
   consultation_type: 'in-person' | 'online'
   reason_for_visit: string
   status: 'pending' | 'confirmed' | 'rescheduled' | 'cancelled'
+  payment_status: 'pending' | 'paid' | 'pay_at_clinic' | null
+  whatsapp_sent: boolean
   created_at: string
 }
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const sb = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
 
 /**
  * Admin Dashboard — Appointment management page.
@@ -35,12 +42,27 @@ export default function AdminDashboardPage() {
 
   async function fetchAppointments() {
     try {
+      // Try direct Supabase first
+      if (sb) {
+        const { data, error } = await sb
+          .from('appointments')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(50)
+
+        if (!error && data && data.length > 0) {
+          setAppointments(data as Appointment[])
+          setLoading(false)
+          return
+        }
+      }
+
+      // Fallback to API
       const res = await fetch('/api/admin/appointments')
       if (res.ok) {
         const data = await res.json()
         setAppointments(data.appointments ?? [])
       } else {
-        // Fallback mock data for development
         setAppointments(getMockAppointments())
       }
     } catch {
@@ -141,6 +163,12 @@ export default function AdminDashboardPage() {
                     Reason
                   </th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                    Payment
+                  </th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                    WA Proof
+                  </th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Actions
                   </th>
                 </tr>
@@ -173,6 +201,26 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 max-w-[200px] truncate">
                       {apt.reason_for_visit}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
+                          apt.payment_status === 'paid'
+                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                            : apt.payment_status === 'pay_at_clinic'
+                            ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300'
+                            : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
+                        }`}
+                      >
+                        {apt.payment_status === 'paid' ? '✓ Paid' : apt.payment_status === 'pay_at_clinic' ? '🏥 At Clinic' : '⏳ Pending'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {apt.whatsapp_sent ? (
+                        <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">✓ Sent</span>
+                      ) : (
+                        <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
@@ -247,6 +295,8 @@ function getMockAppointments(): Appointment[] {
       consultation_type: 'in-person',
       reason_for_visit: 'Chronic skin rashes and itching for 2 weeks',
       status: 'pending',
+      payment_status: 'paid',
+      whatsapp_sent: true,
       created_at: new Date().toISOString(),
     },
     {
@@ -258,6 +308,8 @@ function getMockAppointments(): Appointment[] {
       consultation_type: 'online',
       reason_for_visit: 'Follow-up for digestive issues',
       status: 'pending',
+      payment_status: 'pending',
+      whatsapp_sent: false,
       created_at: new Date().toISOString(),
     },
     {
@@ -269,6 +321,8 @@ function getMockAppointments(): Appointment[] {
       consultation_type: 'in-person',
       reason_for_visit: 'Joint pain and morning stiffness',
       status: 'confirmed',
+      payment_status: 'pay_at_clinic',
+      whatsapp_sent: false,
       created_at: new Date().toISOString(),
     },
     {
@@ -280,6 +334,8 @@ function getMockAppointments(): Appointment[] {
       consultation_type: 'in-person',
       reason_for_visit: 'Hair fall treatment consultation',
       status: 'pending',
+      payment_status: 'paid',
+      whatsapp_sent: true,
       created_at: new Date().toISOString(),
     },
   ]
