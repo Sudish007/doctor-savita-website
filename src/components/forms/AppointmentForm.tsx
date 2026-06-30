@@ -414,7 +414,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="glass-card max-w-3xl mx-auto p-6 md:p-8"
+            className="glass-card max-w-4xl mx-auto p-6 md:p-8"
           >
             {/* Step indicator */}
             <div className="flex items-center justify-center gap-2 mb-6">
@@ -576,7 +576,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="glass-card max-w-3xl mx-auto p-8 md:p-10 text-center"
+            className="glass-card max-w-4xl mx-auto p-8 md:p-10 text-center"
           >
             {/* Success icon */}
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
@@ -657,7 +657,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="max-w-3xl mx-auto mb-8"
+          className="max-w-4xl mx-auto mb-8"
         >
           <a
             href="/ask-dr-savita"
@@ -697,7 +697,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="glass-card max-w-3xl mx-auto p-6 md:p-10"
+          className="glass-card max-w-4xl mx-auto p-6 md:p-10"
         >
           {/* Section title */}
           <h2 className="text-fluid-h3 font-heading text-foreground text-center mb-2">

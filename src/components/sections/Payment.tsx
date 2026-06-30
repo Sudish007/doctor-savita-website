@@ -99,7 +99,7 @@ export function Payment() {
 
   return (
     <section id="payment" className="section-padding">
-      <div className="container-content max-w-3xl lg:max-w-4xl mx-auto">
+      <div className="container-content max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

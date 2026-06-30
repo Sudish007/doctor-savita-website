@@ -7,7 +7,6 @@ import { Services } from "@/components/sections/Services";
 import { Credentials } from "@/components/sections/Credentials";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { RemedyOfTheDay } from "@/components/sections/RemedyOfTheDay";
-import { BodyMap } from "@/components/sections/BodyMap";
 import { LiveQueue } from "@/components/sections/LiveQueue";
 import { CostEstimator } from "@/components/sections/CostEstimator";
 import { Payment } from "@/components/sections/Payment";
@@ -32,7 +31,6 @@ export default function HomePage() {
         <Credentials />
         <Testimonials />
         <RemedyOfTheDay />
-        <BodyMap />
         <LiveQueue />
         <CostEstimator />
         <Payment />
