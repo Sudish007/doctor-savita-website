@@ -84,7 +84,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="relative min-h-[60vh] md:min-h-[70vh] lg:min-h-0 lg:py-20 flex items-center overflow-hidden"
       aria-label="Hero section"
     >
       {/* Gradient background with parallax */}

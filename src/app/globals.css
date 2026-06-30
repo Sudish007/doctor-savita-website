@@ -144,7 +144,7 @@
   /* Container with max-width */
   .container-content {
     @apply mx-auto w-full;
-    max-width: 1280px;
+    max-width: 1152px;
     padding-left: var(--spacing-container);
     padding-right: var(--spacing-container);
   }
