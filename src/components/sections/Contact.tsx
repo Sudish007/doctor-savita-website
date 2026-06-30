@@ -52,7 +52,7 @@ export function Contact() {
         </motion.div>
 
         {/* 2-column layout: Left (map + info) | Right (form) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
           {/* Left Column — Map + Clinic Info */}
           <motion.div
             variants={staggerContainer}

@@ -148,7 +148,7 @@ export function Navigation() {
     <nav
       ref={navRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "glass-nav shadow-glass" : "bg-transparent"
+        isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm border-b border-border-light" : "bg-transparent"
       }`}
       role="navigation"
       aria-label="Main navigation"
