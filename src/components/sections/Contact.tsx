@@ -83,19 +83,25 @@ export function Contact() {
                 <span className="text-xl mt-0.5" aria-hidden="true">📍</span>
                 <div>
                   <h4 className="text-fluid-body font-semibold text-foreground mb-0.5">
-                    Private Clinic
+                    Saubhagya Clinic (Private)
                   </h4>
                   <p className="text-foreground-muted text-fluid-body-sm">
-                    Village Pipra, Post Khedhay, PS Andar, Siwan
+                    Near BL Public School, Village Pipra,
                   </p>
                   <p className="text-foreground-muted text-fluid-body-sm">
-                    Near BL Public School, Bihar
+                    Post Khedhay, PS Andar, Siwan, Bihar
+                  </p>
+                  <p className="text-foreground-muted text-fluid-caption mt-1">
+                    <span className="font-medium text-foreground">Timing:</span> 6–8 AM & 3–6 PM (Weekdays) | Sun: 10 AM–5 PM
                   </p>
                   <h4 className="text-fluid-body font-semibold text-foreground mb-0.5 mt-3">
-                    Govt. Clinic (Free Treatment)
+                    PHC Khujhwa (Govt. — Free Treatment)
                   </h4>
                   <p className="text-foreground-muted text-fluid-body-sm">
                     Primary Health Centre, Khujhwa, Siwan, Bihar
+                  </p>
+                  <p className="text-foreground-muted text-fluid-caption mt-1">
+                    <span className="font-medium text-foreground">Timing:</span> 9 AM–2 PM (Weekdays) | Sunday Closed
                   </p>
                 </div>
               </div>
@@ -142,13 +148,17 @@ export function Contact() {
                   <h4 className="text-fluid-body font-semibold text-foreground mb-1">
                     Operating Hours
                   </h4>
-                  <div className="space-y-0.5 text-fluid-body-sm text-foreground-muted">
-                    <p>
-                      <span className="font-medium text-foreground">Mon – Sat:</span> 9:00 AM – 5:00 PM
-                    </p>
-                    <p className="text-destructive/80 font-medium">
-                      Closed on Sundays
-                    </p>
+                  <div className="space-y-1.5 text-fluid-body-sm text-foreground-muted">
+                    <div>
+                      <p className="font-medium text-foreground text-xs">Saubhagya Clinic (Private)</p>
+                      <p>Weekdays: 6:00–8:00 AM & 3:00–6:00 PM</p>
+                      <p>Sunday: 10:00 AM – 5:00 PM</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground text-xs">PHC Khujhwa (Govt.)</p>
+                      <p>Weekdays: 9:00 AM – 2:00 PM</p>
+                      <p className="text-destructive/80 font-medium">Sunday: Closed</p>
+                    </div>
                   </div>
                 </div>
               </div>
