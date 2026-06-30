@@ -175,7 +175,7 @@ export default function Footer() {
                     clipRule="evenodd"
                   />
                 </svg>
-                Village Pipra, Post Khedhay, PS Andar, Siwan (Near BL Public School)
+                Saubhagya Clinic — Near BL Public School, Village Pipra, Post Khedhay, PS Andar, Siwan
               </p>
               <p className="flex items-center gap-2">
                 <svg
