@@ -145,28 +145,6 @@ export function Contact() {
                   </div>
                 </div>
               </div>
-
-              {/* Operating Hours */}
-              <div className="flex items-start gap-3">
-                <span className="text-xl mt-0.5" aria-hidden="true">🕘</span>
-                <div>
-                  <h4 className="text-fluid-body font-semibold text-foreground mb-1">
-                    Operating Hours
-                  </h4>
-                  <div className="space-y-1.5 text-fluid-body-sm text-foreground-muted">
-                    <div>
-                      <p className="font-medium text-foreground text-xs">Saubhagya Multispeciality Clinic (Private)</p>
-                      <p>Weekdays: 6:00–8:00 AM & 3:00–6:00 PM</p>
-                      <p>Sunday: 10:00 AM – 5:00 PM</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground text-xs">PHC Khujhwa (Govt.)</p>
-                      <p>Weekdays: 9:00 AM – 2:00 PM</p>
-                      <p className="text-destructive/80 font-medium">Sunday: Closed</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </motion.div>
           </motion.div>
 
