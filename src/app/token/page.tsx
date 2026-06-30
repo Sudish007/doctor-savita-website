@@ -101,25 +101,72 @@ export default function TokenPage() {
         </div>
 
         {myToken ? (
-          /* Token Assigned */
+          /* Token Assigned - Movie Ticket Style */
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center border border-emerald-200 dark:border-emerald-800"
+            className="relative overflow-hidden"
           >
-            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-              <span className="text-4xl">🎫</span>
+            {/* Ticket Card */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-emerald-200 dark:border-emerald-800">
+              {/* Ticket Header - Clinic Name */}
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 text-center">
+                <p className="text-emerald-100 text-xs font-medium uppercase tracking-wider">Saubhagya Clinic</p>
+                <p className="text-white font-bold text-lg">Dr. Savita Kumari</p>
+                <p className="text-emerald-200 text-xs">BHMS | AYUSH Dept., Govt. of Bihar</p>
+              </div>
+
+              {/* Perforated line effect */}
+              <div className="relative h-4">
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-full"></div>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-8 h-8 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-full"></div>
+                <div className="absolute inset-x-4 top-1/2 border-t-2 border-dashed border-gray-200 dark:border-gray-600"></div>
+              </div>
+
+              {/* Token Number - Large Center */}
+              <div className="text-center py-6 px-6">
+                <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">Token Number</p>
+                <p className="text-7xl font-black text-emerald-600 dark:text-emerald-400 my-2">#{myToken}</p>
+                <div className="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-mono font-medium">
+                  {myPatientId}
+                </div>
+              </div>
+
+              {/* Patient Details Grid */}
+              <div className="px-6 pb-4 grid grid-cols-2 gap-3">
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+                  <p className="text-[10px] text-gray-400 uppercase font-medium">Patient Name</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{patientName || 'Walk-in'}</p>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+                  <p className="text-[10px] text-gray-400 uppercase font-medium">Phone</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{phone || 'N/A'}</p>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+                  <p className="text-[10px] text-gray-400 uppercase font-medium">Est. Wait</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">~{myToken * 10} min</p>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+                  <p className="text-[10px] text-gray-400 uppercase font-medium">Date</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                </div>
+              </div>
+
+              {/* Perforated line effect */}
+              <div className="relative h-4">
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-full"></div>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-8 h-8 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-full"></div>
+                <div className="absolute inset-x-4 top-1/2 border-t-2 border-dashed border-gray-200 dark:border-gray-600"></div>
+              </div>
+
+              {/* Footer - Clinic Address */}
+              <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700/30 text-center">
+                <p className="text-xs text-gray-500 dark:text-gray-400">📍 Near BL Public School, Village Pipra, Siwan</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Valid for today&apos;s session only</p>
+              </div>
             </div>
-            <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium mb-1">Your Token Number</p>
-            <p className="text-6xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">#{myToken}</p>
-            {myPatientId && (
-              <p className="text-xs font-mono text-gray-500 mb-4">ID: {myPatientId}</p>
-            )}
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-300 space-y-1">
-              <p>⏱️ Estimated wait: <strong>~{myToken * 10} min</strong></p>
-              <p>📍 Saubhagya Clinic, Village Pipra, Siwan</p>
-              {patientName && <p>👤 {patientName}</p>}
-            </div>
+
+            {/* Action Buttons */}
             <div className="mt-6 flex gap-3">
               <a
                 href="/"
