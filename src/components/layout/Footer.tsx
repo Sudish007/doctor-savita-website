@@ -108,21 +108,22 @@ export default function Footer() {
 
         const sb = createClient(url, key);
 
-        // Increment visitor counter
-        const { data } = await sb.rpc('increment_visitor_count');
-        if (data) {
-          setVisitorCount(data);
-        } else {
-          // Fallback: read current count
-          const { data: setting } = await sb
-            .from('site_settings')
-            .select('value')
-            .eq('key', 'visitor_count')
-            .single();
-          if (setting?.value) {
-            setVisitorCount(parseInt(setting.value, 10));
-          }
-        }
+        // Read current count
+        const { data: setting } = await sb
+          .from('site_settings')
+          .select('value')
+          .eq('key', 'visitor_count')
+          .single();
+
+        const currentCount = setting?.value ? parseInt(setting.value, 10) : 0;
+        const newCount = currentCount + 1;
+
+        // Update count
+        await sb
+          .from('site_settings')
+          .upsert({ key: 'visitor_count', value: String(newCount) }, { onConflict: 'key' });
+
+        setVisitorCount(newCount);
       } catch {
         // Silent fail
       }
