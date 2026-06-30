@@ -199,10 +199,10 @@ export default function AdminUsersPage() {
           </h3>
         </div>
 
-        {/* Default admin note */}
+        {/* Default admin note - only visible to admin role */}
         <div className="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-800">
           <p className="text-xs text-yellow-700 dark:text-yellow-300">
-            Default admin: password <code className="bg-yellow-100 dark:bg-yellow-900/40 px-1 rounded">savita2025</code> (from login page)
+            ⚠️ Master password login is available for emergency access only.
           </p>
         </div>
 
