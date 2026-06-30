@@ -191,66 +191,30 @@ export function About() {
           </motion.div>
 
           {/* Biography Text - Right on desktop, below on mobile */}
-          <motion.div variants={itemVariants} className="space-y-6">
+          <motion.div variants={itemVariants} className="space-y-5">
             {/* Biography */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <p className="text-foreground-secondary leading-relaxed">
                 {t('bioParagraph1')}
               </p>
-              <p className="text-foreground-secondary leading-relaxed">
-                {t('bioParagraph2')}
-              </p>
-              <p className="text-foreground-secondary leading-relaxed">
-                {t('bioParagraph3')}
-              </p>
+              {t('bioParagraph2') && (
+                <p className="text-foreground-secondary leading-relaxed italic border-l-3 border-primary pl-4">
+                  {t('bioParagraph2')}
+                </p>
+              )}
             </div>
 
-            {/* Treatment Principles */}
-            <div className="space-y-3 pt-4 border-t border-border-light">
-              <h3 className="text-fluid-h5 font-heading text-foreground">
-                {t('treatmentPhilosophy')}
-              </h3>
-              <ul className="space-y-3" role="list">
-                <li className="flex items-start gap-3">
-                  <span
-                    className="inline-flex items-center justify-center w-6 h-6 mt-0.5 rounded-full bg-accent-light text-accent flex-shrink-0"
-                    aria-hidden="true"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </span>
-                  <span className="text-foreground-secondary">
-                    {t('principle1')}
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="inline-flex items-center justify-center w-6 h-6 mt-0.5 rounded-full bg-accent-light text-accent flex-shrink-0"
-                    aria-hidden="true"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </span>
-                  <span className="text-foreground-secondary">
-                    {t('principle2')}
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="inline-flex items-center justify-center w-6 h-6 mt-0.5 rounded-full bg-accent-light text-accent flex-shrink-0"
-                    aria-hidden="true"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </span>
-                  <span className="text-foreground-secondary">
-                    {t('principle3')}
-                  </span>
-                </li>
-              </ul>
+            {/* Treatment Principles - compact inline */}
+            <div className="flex flex-wrap gap-2 pt-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent-light text-accent-foreground">
+                ✓ {t('principle1')}
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent-light text-accent-foreground">
+                ✓ {t('principle2')}
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent-light text-accent-foreground">
+                ✓ {t('principle3')}
+              </span>
             </div>
           </motion.div>
         </motion.div>
