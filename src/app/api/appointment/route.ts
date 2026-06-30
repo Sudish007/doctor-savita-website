@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { appointmentFormSchema } from '@/lib/validators/appointment';
 import { sendAppointmentNotifications } from '@/lib/whatsapp/send';
+import { sendPatientConfirmationEmail, sendDoctorNotificationEmail } from '@/lib/email/send';
 import type { AppointmentResponse } from '@/types';
 
 /**
@@ -99,6 +100,30 @@ export async function POST(request: Request) {
     } catch (whatsappError) {
       // WhatsApp failure should not block the appointment booking
       console.error('[Appointment API] WhatsApp notification error:', whatsappError);
+    }
+
+    // 5b. Send email notifications (non-blocking)
+    try {
+      const emailData = {
+        patientName: formData.patientName,
+        phoneNumber: formData.phoneNumber,
+        preferredDate: formData.preferredDate,
+        preferredTime: formData.preferredTime,
+        consultationType: formData.consultationType,
+        reasonForVisit: formData.reasonForVisit,
+        paymentStatus: paymentStatus,
+      }
+
+      // Send to doctor (goes to sudishdreams@gmail.com)
+      await sendDoctorNotificationEmail(emailData)
+
+      // Patient email disabled — requires custom domain on Resend
+      // if (formData.email) {
+      //   await sendPatientConfirmationEmail(formData.email, emailData)
+      // }
+    } catch (emailError) {
+      // Email failure should not block booking
+      console.error('[Appointment API] Email notification error:', emailError)
     }
 
     // 6. Return success response

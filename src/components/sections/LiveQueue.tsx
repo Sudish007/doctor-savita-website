@@ -1,6 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import { useRealtimeQueue } from '@/hooks/useRealtimeQueue'
 
 /**
@@ -9,6 +10,7 @@ import { useRealtimeQueue } from '@/hooks/useRealtimeQueue'
  */
 
 export function LiveQueue() {
+  const t = useTranslations('queue')
   const {
     currentToken,
     waitingCount,
@@ -20,7 +22,7 @@ export function LiveQueue() {
   const prefersReducedMotion = useReducedMotion()
 
   return (
-    <section id="live-queue" className="py-section" aria-label="Live queue status">
+    <section id="live-queue" className="py-section" aria-label={t('title')}>
       <div className="container-content max-w-4xl mx-auto">
         <motion.h2
           className="text-fluid-h3 font-heading font-bold text-foreground text-center mb-8"
@@ -29,7 +31,7 @@ export function LiveQueue() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          Live Queue Status
+          {t('title')}
         </motion.h2>
 
         <motion.div
@@ -55,12 +57,12 @@ export function LiveQueue() {
                   {!prefersReducedMotion && <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />}
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
                 </span>
-                <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">Clinic Open</span>
+                <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">{t('clinicOpen')}</span>
               </div>
 
               {/* Now Serving */}
               <div>
-                <p className="text-foreground-muted text-sm font-medium uppercase tracking-wide mb-1">Now Serving</p>
+                <p className="text-foreground-muted text-sm font-medium uppercase tracking-wide mb-1">{t('nowServing')}</p>
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={currentToken}
@@ -70,7 +72,7 @@ export function LiveQueue() {
                     exit={{ opacity: 0, y: 10, scale: 0.9 }}
                     transition={{ duration: 0.35 }}
                   >
-                    Token #{currentToken}
+                    {t('token')} #{currentToken}
                   </motion.p>
                 </AnimatePresence>
               </div>
@@ -78,44 +80,44 @@ export function LiveQueue() {
               {/* Stats */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 pt-2">
                 <div className="text-center">
-                  <p className="text-foreground-muted text-xs font-medium uppercase tracking-wide mb-0.5">Patients Waiting</p>
+                  <p className="text-foreground-muted text-xs font-medium uppercase tracking-wide mb-0.5">{t('waiting')}</p>
                   <p className="text-2xl md:text-3xl font-bold text-foreground">{waitingCount}</p>
                 </div>
                 <div className="hidden sm:block w-px h-10 bg-border" />
                 <div className="text-center">
-                  <p className="text-foreground-muted text-xs font-medium uppercase tracking-wide mb-0.5">Estimated Wait</p>
-                  <p className="text-2xl md:text-3xl font-bold text-foreground">~{estimatedWaitMinutes} min</p>
+                  <p className="text-foreground-muted text-xs font-medium uppercase tracking-wide mb-0.5">{t('estimatedWait')}</p>
+                  <p className="text-2xl md:text-3xl font-bold text-foreground">~{estimatedWaitMinutes} {t('minutes')}</p>
                 </div>
               </div>
 
-              {/* Take Token — links to /token page */}
+              {/* Take Token CTA */}
               <div className="pt-6 border-t border-border-light mt-4">
                 <a
                   href="/token"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-base bg-primary text-primary-foreground hover:bg-primary-hover shadow-elevation-2 hover:shadow-elevation-3 transition-all touch-target"
                 >
-                  🎟️ Take Token
+                  🎟️ {t('takeToken')}
                 </a>
-                <p className="text-xs text-foreground-muted mt-2">Join the queue from home</p>
+                <p className="text-xs text-foreground-muted mt-2">{t('joinQueue')}</p>
               </div>
             </div>
           ) : (
             <div className="text-center py-4">
               <div className="flex items-center justify-center gap-2 mb-4">
                 <span className="w-3 h-3 rounded-full bg-gray-400" />
-                <span className="text-sm font-medium text-foreground-muted">Clinic Closed</span>
+                <span className="text-sm font-medium text-foreground-muted">{t('clinicClosed')}</span>
               </div>
-              <p className="text-3xl md:text-4xl font-heading font-bold text-foreground-muted/60">Clinic Closed</p>
-              <p className="mt-3 text-sm text-foreground-muted">Operating hours: Mon–Sat, 9:00 AM – 6:00 PM IST</p>
+              <p className="text-3xl md:text-4xl font-heading font-bold text-foreground-muted/60">{t('clinicClosed')}</p>
+              <p className="mt-3 text-sm text-foreground-muted">{t('operatingHours')}</p>
 
               <div className="pt-6 border-t border-border-light mt-6">
                 <a
                   href="/token"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-base bg-primary text-primary-foreground hover:bg-primary-hover shadow-elevation-2 hover:shadow-elevation-3 transition-all touch-target"
                 >
-                  🎟️ Take Token
+                  🎟️ {t('takeToken')}
                 </a>
-                <p className="text-xs text-foreground-muted mt-2">Reserve your spot for the next session</p>
+                <p className="text-xs text-foreground-muted mt-2">{t('reserveSpot')}</p>
               </div>
             </div>
           )}

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { contactFormSchema } from '@/lib/validators/contact';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { sendContactInquiryEmail } from '@/lib/email/send';
 
 /**
  * POST /api/contact
@@ -31,6 +32,13 @@ export async function POST(request: Request) {
     } catch {
       // If table doesn't exist or DB error, still return success to user
       console.error('[Contact API] Failed to save to Supabase');
+    }
+
+    // Send email notification to doctor (non-blocking)
+    try {
+      await sendContactInquiryEmail(name, email, message)
+    } catch {
+      // Email failure should not block the response
     }
 
     return NextResponse.json(

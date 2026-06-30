@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 /**
  * Credentials Section - Vertical animated timeline displaying qualifications.
@@ -235,6 +236,7 @@ function TimelineItem({
 }
 
 export function Credentials() {
+  const t = useTranslations('credentials');
   const sectionRef = useRef<HTMLElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
@@ -262,7 +264,7 @@ export function Credentials() {
             id="credentials-title"
             className="text-fluid-h2 font-heading text-foreground mb-4"
           >
-            Qualifications & Credentials
+            {t('title')}
           </h2>
           <p className="text-foreground-secondary max-w-2xl mx-auto text-fluid-body-sm">
             A journey of dedication to homeopathic medicine and community

@@ -14,6 +14,8 @@ interface Appointment {
   status: 'pending' | 'confirmed' | 'rescheduled' | 'cancelled'
   payment_status: 'pending' | 'paid' | 'pay_at_clinic' | null
   whatsapp_sent: boolean
+  notes: string | null
+  prescription: string | null
   created_at: string
 }
 
@@ -75,6 +77,9 @@ export default function AdminDashboardPage() {
   const [rescheduleId, setRescheduleId] = useState<string | null>(null)
   const [newDate, setNewDate] = useState('')
   const [newTime, setNewTime] = useState('')
+  const [notesId, setNotesId] = useState<string | null>(null)
+  const [notesText, setNotesText] = useState('')
+  const [prescriptionText, setPrescriptionText] = useState('')
 
   async function handleConfirm(id: string) {
     setActionLoading(id)
@@ -131,6 +136,27 @@ export default function AdminDashboardPage() {
       )
     } catch (err) {
       console.error('Cancel failed:', err)
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  async function handleSaveNotes() {
+    if (!notesId || !sb) return
+    setActionLoading(notesId)
+    try {
+      await sb.from('appointments').update({
+        notes: notesText.trim() || null,
+        prescription: prescriptionText.trim() || null,
+      }).eq('id', notesId)
+      setAppointments((prev) =>
+        prev.map((apt) => apt.id === notesId ? { ...apt, notes: notesText.trim() || null, prescription: prescriptionText.trim() || null } : apt)
+      )
+      setNotesId(null)
+      setNotesText('')
+      setPrescriptionText('')
+    } catch (err) {
+      console.error('Save notes failed:', err)
     } finally {
       setActionLoading(null)
     }
@@ -263,7 +289,7 @@ export default function AdminDashboardPage() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
                         <button
                           onClick={() => handleConfirm(apt.id)}
                           disabled={actionLoading === apt.id}
@@ -277,6 +303,12 @@ export default function AdminDashboardPage() {
                           className="px-3 py-1 text-xs font-medium rounded bg-yellow-500 text-white hover:bg-yellow-600 disabled:opacity-50 transition-colors"
                         >
                           Reschedule
+                        </button>
+                        <button
+                          onClick={() => { setNotesId(apt.id); setNotesText(apt.notes || ''); setPrescriptionText(apt.prescription || ''); }}
+                          className="px-3 py-1 text-xs font-medium rounded bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                        >
+                          📝 Notes
                         </button>
                         <button
                           onClick={() => handleCancel(apt.id)}
@@ -337,6 +369,51 @@ export default function AdminDashboardPage() {
                 className="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 disabled:opacity-50"
               >
                 Save New Date
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notes/Prescription Modal */}
+      {notesId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">📝 Doctor&apos;s Notes & Prescription</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Clinical Notes</label>
+                <textarea
+                  value={notesText}
+                  onChange={(e) => setNotesText(e.target.value)}
+                  rows={3}
+                  placeholder="Observations, diagnosis, follow-up instructions..."
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm resize-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Prescription</label>
+                <textarea
+                  value={prescriptionText}
+                  onChange={(e) => setPrescriptionText(e.target.value)}
+                  rows={4}
+                  placeholder="Remedy name, potency, dosage, duration..."
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm resize-none"
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 mt-5">
+              <button
+                onClick={() => setNotesId(null)}
+                className="flex-1 px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveNotes}
+                className="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Save Notes
               </button>
             </div>
           </div>

@@ -26,10 +26,12 @@ import {
 export function SeasonalAlert() {
   const [isDismissed, setIsDismissed] = useState(true); // Start hidden to avoid flash
   const [mounted, setMounted] = useState(false);
+  const [customAlert, setCustomAlert] = useState<{ title: string; description: string; icon: string; link?: string } | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   const currentMonth = new Date().getMonth() + 1; // 1-based
-  const alert = getSeasonalAlert(currentMonth);
+  const defaultAlert = getSeasonalAlert(currentMonth);
+  const alert = customAlert || defaultAlert;
 
   useEffect(() => {
     setMounted(true);
@@ -38,10 +40,38 @@ export function SeasonalAlert() {
       const dismissed = sessionStorage.getItem(SEASONAL_ALERT_STORAGE_KEY);
       setIsDismissed(dismissed === "true");
     } catch {
-      // sessionStorage unavailable (SSR or privacy mode)
       setIsDismissed(false);
     }
+
+    // Try to fetch custom alert from Supabase
+    fetchCustomAlert();
   }, []);
+
+  async function fetchCustomAlert() {
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+      if (!supabaseUrl || !supabaseKey) return;
+
+      const { createClient } = await import('@supabase/supabase-js');
+      const sb = createClient(supabaseUrl, supabaseKey);
+
+      const { data } = await sb
+        .from('site_settings')
+        .select('value')
+        .eq('key', 'seasonal_alert')
+        .single();
+
+      if (data?.value) {
+        const parsed = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+        if (parsed.title && parsed.active !== false) {
+          setCustomAlert(parsed);
+        }
+      }
+    } catch {
+      // Silently fall back to default seasonal alert
+    }
+  }
 
   const handleDismiss = () => {
     setIsDismissed(true);

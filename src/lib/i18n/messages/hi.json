@@ -9,6 +9,7 @@
     "live-queue": "टोकन",
     "appointment": "अपॉइंटमेंट",
     "videoConsultation": "वीडियो परामर्श",
+    "myAppointments": "मेरी अपॉइंटमेंट",
     "contact": "संपर्क"
   },
   "buttons": {
@@ -191,7 +192,12 @@
     "waiting": "प्रतीक्षारत मरीज़",
     "estimatedWait": "अनुमानित प्रतीक्षा",
     "minutes": "मिनट",
-    "clinicClosed": "क्लिनिक बंद है"
+    "clinicOpen": "क्लिनिक खुला है",
+    "clinicClosed": "क्लिनिक बंद है",
+    "takeToken": "टोकन लें",
+    "joinQueue": "घर बैठे कतार में शामिल हों",
+    "reserveSpot": "अगली सत्र के लिए अपनी जगह बुक करें",
+    "operatingHours": "समय: सोम-शनि, सुबह 9:00 – शाम 6:00 बजे"
   },
   "remedy": {
     "title": "आज की दवा",

@@ -9,6 +9,7 @@
     "live-queue": "Token",
     "appointment": "Appointment",
     "videoConsultation": "Video Consultation",
+    "myAppointments": "My Appointments",
     "contact": "Contact"
   },
   "buttons": {
@@ -162,7 +163,7 @@
     "title": "Symptom Assistant"
   },
   "testimonials": {
-    "title": "Patient Testimonials",
+    "title": "What Our Patients Say",
     "aggregateRating": "Overall Rating",
     "totalReviews": "reviews",
     "submitReview": "Submit Your Review"
@@ -191,7 +192,12 @@
     "waiting": "Patients Waiting",
     "estimatedWait": "Estimated Wait",
     "minutes": "minutes",
-    "clinicClosed": "Clinic Closed"
+    "clinicOpen": "Clinic Open",
+    "clinicClosed": "Clinic Closed",
+    "takeToken": "Take Token",
+    "joinQueue": "Join the queue from home",
+    "reserveSpot": "Reserve your spot for the next session",
+    "operatingHours": "Operating hours: Mon–Sat, 9:00 AM – 6:00 PM IST"
   },
   "remedy": {
     "title": "Remedy of the Day",
