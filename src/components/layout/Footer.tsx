@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { createClient } from "@supabase/supabase-js";
 
 /**
  * Footer component for Dr. Savita Kumari's website.
@@ -95,6 +96,39 @@ export default function Footer() {
   const tNav = useTranslations('nav');
   const tButtons = useTranslations('buttons');
   const currentYear = new Date().getFullYear();
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+
+  // Track and display visitor count
+  useEffect(() => {
+    async function trackVisit() {
+      try {
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+        if (!url || !key) return;
+
+        const sb = createClient(url, key);
+
+        // Increment visitor counter
+        const { data } = await sb.rpc('increment_visitor_count');
+        if (data) {
+          setVisitorCount(data);
+        } else {
+          // Fallback: read current count
+          const { data: setting } = await sb
+            .from('site_settings')
+            .select('value')
+            .eq('key', 'visitor_count')
+            .single();
+          if (setting?.value) {
+            setVisitorCount(parseInt(setting.value, 10));
+          }
+        }
+      } catch {
+        // Silent fail
+      }
+    }
+    trackVisit();
+  }, []);
 
   const handleBackToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -246,6 +280,12 @@ export default function Footer() {
             <a href="/admin/login" className="text-foreground-muted/60 hover:text-primary text-xs transition-colors">
               Admin
             </a>
+            {visitorCount && (
+              <>
+                <span className="mx-2">·</span>
+                <span className="text-xs text-foreground-muted/60">👁️ {visitorCount.toLocaleString('en-IN')} visitors</span>
+              </>
+            )}
           </p>
 
           <button
