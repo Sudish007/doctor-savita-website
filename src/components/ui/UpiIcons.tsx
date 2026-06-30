@@ -6,10 +6,12 @@
 export function GPayIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-      <path d="M23.987 24.5l5.07-8.784h5.09L28.06 24.5l6.087 8.784h-5.18L23.987 24.5z" fill="#EA4335"/>
-      <path d="M17.2 33.284V15.716h5.736c1.577 0 2.94.315 4.088.946a6.41 6.41 0 012.68 2.646c.63 1.134.946 2.437.946 3.908 0 1.482-.315 2.79-.946 3.924a6.453 6.453 0 01-2.68 2.652c-1.149.63-2.511.946-4.088.946H17.2z" fill="none" stroke="#4285F4" strokeWidth="2.5"/>
-      <circle cx="12" cy="24.5" r="4" fill="#34A853"/>
-      <circle cx="12" cy="24.5" r="2" fill="#FBBC05"/>
+      {/* Google Pay "G" logo - 4 color Google icon */}
+      <rect width="48" height="48" rx="12" fill="#fff" stroke="#e8e8e8" strokeWidth="1"/>
+      <path d="M36.64 24.2c0-.82-.07-1.6-.2-2.36H24.5v4.46h6.82a5.83 5.83 0 01-2.53 3.82v3.18h4.1c2.4-2.2 3.78-5.46 3.78-9.1z" fill="#4285F4"/>
+      <path d="M24.5 37c3.42 0 6.29-1.13 8.39-3.07l-4.1-3.18c-1.13.76-2.58 1.21-4.29 1.21-3.3 0-6.1-2.23-7.1-5.23h-4.23v3.28A12.5 12.5 0 0024.5 37z" fill="#34A853"/>
+      <path d="M17.4 26.73a7.5 7.5 0 010-4.78v-3.28h-4.23a12.5 12.5 0 000 11.34l4.23-3.28z" fill="#FBBC05"/>
+      <path d="M24.5 16.72c1.86 0 3.53.64 4.84 1.9l3.63-3.63C30.78 12.97 27.9 11.7 24.5 11.7a12.5 12.5 0 00-11.33 7.08l4.23 3.28c1-3 3.8-5.23 7.1-5.23z" fill="#EA4335"/>
     </svg>
   )
 }
@@ -26,13 +28,9 @@ export function PhonePeIcon({ className = 'w-8 h-8' }: { className?: string }) {
 export function PaytmIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-      <rect width="48" height="48" rx="12" fill="#00315D"/>
-      <path d="M7 20h3.5c1.5 0 2.5 1 2.5 2.3 0 1.3-1 2.3-2.5 2.3H9v3.4H7V20zm2 1.4v2.3h1.3c.7 0 1.1-.4 1.1-1.1 0-.7-.4-1.2-1.1-1.2H9z" fill="white"/>
-      <path d="M14.5 22.2c1.4 0 2.3 1 2.3 2.7v3.1h-1.7v-.6c-.4.5-1 .8-1.6.8-1.1 0-1.8-.7-1.8-1.6 0-1 .7-1.5 1.9-1.5h1.3v-.2c0-.6-.4-1-1.1-1-.5 0-1 .2-1.4.6l-.8-1c.6-.7 1.6-1.1 2.5-1.1h.4zm-.4 4.8c.5 0 .9-.2 1.2-.6v-.7h-1c-.6 0-.9.2-.9.6 0 .4.3.7.7.7z" fill="white"/>
-      <path d="M18 24.2l-1-.1v-1.7l1-.1V20h1.8v2.2h1.4v1.7h-1.4v2.3c0 .4.2.6.6.6h.7v1.6c-.4.1-.8.2-1.2.2-1.3 0-1.9-.6-1.9-1.8v-2.6z" fill="white"/>
-      <path d="M22 22.3h1.7v.7c.4-.5 1-.8 1.7-.8 1 0 1.7.5 2 1.3.5-.8 1.2-1.3 2.1-1.3 1.4 0 2.2.9 2.2 2.5V28h-1.8v-3c0-.8-.3-1.2-1-1.2-.6 0-1 .4-1.1 1.1V28H26v-3c0-.8-.3-1.2-1-1.2-.6 0-1 .4-1.1 1.1V28H22v-5.7z" fill="white"/>
-      <rect x="33" y="19" width="8" height="10" rx="2" fill="#00B9F5"/>
-      <path d="M35.5 22.5h3M35.5 24.5h3M35.5 26.5h2" stroke="white" strokeWidth=".8" strokeLinecap="round"/>
+      <rect width="48" height="48" rx="12" fill="#00B9F5"/>
+      <text x="24" y="26" textAnchor="middle" fontSize="10" fontWeight="bold" fill="white" fontFamily="Arial, sans-serif">Paytm</text>
+      <text x="24" y="34" textAnchor="middle" fontSize="6" fill="white" fontFamily="Arial, sans-serif">pay</text>
     </svg>
   )
 }
@@ -41,11 +39,13 @@ export function BhimIcon({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
       <rect width="48" height="48" rx="12" fill="#fff" stroke="#ddd" strokeWidth="1"/>
-      <path d="M10 16h6v3h-6z" fill="#098043"/>
-      <path d="M10 19h6v3h-6z" fill="#fff"/>
-      <path d="M10 22h6v3h-6z" fill="#F47920"/>
-      <circle cx="13" cy="20.5" r="1" fill="#000088"/>
-      <text x="20" y="28" fontSize="8" fontWeight="bold" fill="#333" fontFamily="Arial">BHIM</text>
+      {/* BHIM UPI official colors */}
+      <path d="M12 14h24v4H12z" fill="#FF9933"/>
+      <path d="M12 18h24v4H12z" fill="#FFFFFF"/>
+      <path d="M12 22h24v4H12z" fill="#138808"/>
+      <circle cx="24" cy="20" r="2.5" fill="#000080"/>
+      <text x="24" y="33" textAnchor="middle" fontSize="7" fontWeight="bold" fill="#2E3192" fontFamily="Arial, sans-serif">BHIM</text>
+      <text x="24" y="40" textAnchor="middle" fontSize="5" fill="#666" fontFamily="Arial, sans-serif">UPI</text>
     </svg>
   )
 }
@@ -54,10 +54,12 @@ export function AmazonPayIcon({ className = 'w-8 h-8' }: { className?: string })
   return (
     <svg className={className} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
       <rect width="48" height="48" rx="12" fill="#232F3E"/>
-      <path d="M13.8 30.8c4.6 3 10.8 4.6 16.3 4.6 3.2 0 6.7-.7 9.9-2 .5-.2.9.3.4.7-2.8 2.3-7.5 3.7-11.3 3.7-5.5 0-10.8-2-14.7-5.4-.3-.3 0-.7.3-.5l-.9-1.1z" fill="#FF9900"/>
-      <path d="M36.4 29c-.4-.5-2.6-.2-3.6-.1-.3 0-.4-.2-.1-.4 1.8-1.2 4.6-.9 5-.5.3.4-.1 3.4-1.8 4.8-.3.2-.5.1-.4-.2.4-1 1.2-3.2.9-3.6z" fill="#FF9900"/>
-      <text x="14" y="26" fontSize="7.5" fontWeight="bold" fill="white" fontFamily="Arial">amazon</text>
-      <text x="14" y="32" fontSize="5" fill="#FF9900" fontFamily="Arial">pay</text>
+      {/* Amazon logo with smile arrow */}
+      <text x="24" y="22" textAnchor="middle" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial, sans-serif">amazon</text>
+      {/* Orange smile/arrow */}
+      <path d="M14 26c5 3.5 12 5 19 2.5" stroke="#FF9900" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      <path d="M31 25.5l2.5 3-3.5.5" fill="#FF9900"/>
+      <text x="24" y="38" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#FF9900" fontFamily="Arial, sans-serif">pay</text>
     </svg>
   )
 }
