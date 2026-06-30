@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { createClient } from '@supabase/supabase-js'
+import { Navigation } from '@/components/layout/Navigation'
+import Footer from '@/components/layout/Footer'
 
 /**
  * Standalone Token Page — /token
@@ -103,7 +105,9 @@ export default function TokenPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-8">
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 pt-20 pb-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -111,7 +115,6 @@ export default function TokenPage() {
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <a href="/" className="text-sm text-emerald-600 hover:underline mb-2 inline-block">← Back to website</a>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             🎟️ Take Your Token
           </h1>
@@ -132,8 +135,8 @@ export default function TokenPage() {
               {/* Ticket Header - Clinic Name */}
               <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 text-center">
                 <p className="text-emerald-100 text-xs font-medium uppercase tracking-wider">Saubhagya Multispeciality Clinic</p>
-                <p className="text-white font-bold text-lg">Dr. Savita Kumari</p>
-                <p className="text-emerald-200 text-xs">BHMS | AYUSH Dept., Govt. of Bihar</p>
+                <p className="text-white font-bold text-lg">Dr. Savita Kumari (BHMS)</p>
+                <p className="text-emerald-200 text-xs">Medical Officer, AYUSH Dept., Govt. of Bihar</p>
               </div>
 
               {/* Perforated line effect */}
@@ -259,5 +262,7 @@ export default function TokenPage() {
         )}
       </motion.div>
     </div>
+    <Footer />
+    </>
   )
 }
