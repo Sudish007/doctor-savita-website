@@ -64,7 +64,7 @@ const PRICING = [
   { label: 'Follow-up Visit', amount: 100 },
   { label: 'Monthly Remedy Kit', amount: 200 },
   { label: 'Online Consultation (30 min)', amount: 200 },
-  { label: 'Video Consultation (20 min)', amount: 100 },
+  { label: 'Video Consultation (20 min)', amount: 150 },
 ]
 
 export function Payment() {

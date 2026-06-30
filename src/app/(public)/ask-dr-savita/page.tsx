@@ -28,8 +28,14 @@ interface FormErrors {
 }
 
 const MAX_RECORDING_SECONDS = 120; // 2 minutes
+const VIDEO_CONSULTATION_FEE = 150;
+const UPI_ID = 'savitasinghunstoppable98@oksbi';
 
 export default function AskDrSavitaPage() {
+  // Payment gate state
+  const [hasPaid, setHasPaid] = useState(false);
+  const [copiedUpi, setCopiedUpi] = useState(false);
+
   // Recording state
   const [recordingState, setRecordingState] = useState<RecordingState>("idle");
   const [remainingSeconds, setRemainingSeconds] = useState(MAX_RECORDING_SECONDS);
@@ -324,6 +330,96 @@ export default function AskDrSavitaPage() {
             >
               Submit Another Video
             </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Payment gate — show payment first, then recording
+  if (!hasPaid) {
+    return (
+      <main className="section-padding min-h-screen flex items-center justify-center">
+        <div className="container-content max-w-md">
+          <div className="text-center mb-6">
+            <a href="/" className="text-sm text-[var(--primary)] hover:underline">← Back to website</a>
+          </div>
+          <div className="glass-card p-6 md:p-8 rounded-2xl">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-[var(--foreground)] mb-2">📹 Video Consultation</h1>
+              <p className="text-sm text-[var(--foreground-muted)]">
+                Record a 2-min video describing your symptoms. Dr. Savita will respond with personalized advice.
+              </p>
+            </div>
+
+            {/* Fee */}
+            <div className="text-center mb-6 p-4 rounded-xl bg-[var(--primary-light)]">
+              <p className="text-xs text-[var(--foreground-muted)]">Consultation Fee</p>
+              <p className="text-3xl font-bold text-[var(--primary)]">₹{VIDEO_CONSULTATION_FEE}</p>
+            </div>
+
+            {/* QR Code */}
+            <div className="flex justify-center mb-5">
+              <div className="p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <img
+                  src="/images/upi-qr.jpeg"
+                  alt="UPI QR Code"
+                  width={180}
+                  height={180}
+                  className="rounded-lg"
+                />
+              </div>
+            </div>
+
+            {/* UPI ID */}
+            <div className="mb-5 p-3 rounded-xl bg-[var(--background-secondary)] border border-[var(--border)]">
+              <p className="text-xs text-[var(--foreground-muted)] mb-1 font-medium">UPI ID</p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-sm font-mono text-[var(--foreground)] break-all">{UPI_ID}</code>
+                <button
+                  onClick={() => { navigator.clipboard.writeText(UPI_ID); setCopiedUpi(true); setTimeout(() => setCopiedUpi(false), 2000) }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${copiedUpi ? 'bg-emerald-100 text-emerald-700' : 'bg-[var(--primary-light)] text-[var(--primary)]'}`}
+                >
+                  {copiedUpi ? '✓ Copied' : 'Copy'}
+                </button>
+              </div>
+            </div>
+
+            {/* UPI App Icons */}
+            <div className="flex justify-center gap-3 mb-6">
+              {[
+                { name: 'GPay', scheme: 'gpay://upi/pay' },
+                { name: 'PhonePe', scheme: 'phonepe://pay' },
+                { name: 'Paytm', scheme: 'paytmmp://pay' },
+                { name: 'UPI', scheme: 'upi://pay' },
+              ].map(app => (
+                <a
+                  key={app.name}
+                  href={`${app.scheme}?pa=${UPI_ID}&pn=Dr%20Savita&am=${VIDEO_CONSULTATION_FEE}&cu=INR&tn=Video%20Consultation`}
+                  className="px-3 py-1.5 rounded-lg text-xs border border-[var(--border)] hover:border-[var(--primary)] transition-colors"
+                >
+                  {app.name}
+                </a>
+              ))}
+            </div>
+
+            {/* Confirm Payment */}
+            <button
+              onClick={() => setHasPaid(true)}
+              className="w-full py-3.5 rounded-xl font-medium bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-lg mb-3"
+            >
+              ✓ I&apos;ve Paid ₹{VIDEO_CONSULTATION_FEE} — Proceed to Record
+            </button>
+
+            {/* Share proof */}
+            <a
+              href={`https://wa.me/916204309476?text=${encodeURIComponent(`Hi Dr. Savita, I've paid ₹${VIDEO_CONSULTATION_FEE} for video consultation. Payment screenshot attached.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full py-2.5 rounded-xl text-center text-sm font-medium bg-[#25D366] text-white hover:bg-[#1DA851] transition-colors"
+            >
+              📤 Share Payment Proof on WhatsApp
+            </a>
           </div>
         </div>
       </main>
