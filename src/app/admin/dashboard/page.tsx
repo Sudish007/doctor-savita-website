@@ -72,25 +72,65 @@ export default function AdminDashboardPage() {
     }
   }
 
-  async function handleAction(id: string, action: 'confirm' | 'reschedule') {
+  const [rescheduleId, setRescheduleId] = useState<string | null>(null)
+  const [newDate, setNewDate] = useState('')
+  const [newTime, setNewTime] = useState('')
+
+  async function handleConfirm(id: string) {
     setActionLoading(id)
     try {
-      const res = await fetch('/api/admin/appointments', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, action }),
-      })
-      if (res.ok) {
-        setAppointments((prev) =>
-          prev.map((apt) =>
-            apt.id === id
-              ? { ...apt, status: action === 'confirm' ? 'confirmed' : 'rescheduled' }
-              : apt
-          )
-        )
+      if (sb) {
+        await sb.from('appointments').update({ status: 'confirmed' }).eq('id', id)
       }
+      setAppointments((prev) =>
+        prev.map((apt) => apt.id === id ? { ...apt, status: 'confirmed' } : apt)
+      )
     } catch (err) {
-      console.error('Action failed:', err)
+      console.error('Confirm failed:', err)
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  async function handleReschedule() {
+    if (!rescheduleId || !newDate || !newTime) return
+    setActionLoading(rescheduleId)
+    try {
+      if (sb) {
+        await sb.from('appointments').update({
+          preferred_date: newDate,
+          preferred_time: newTime,
+          status: 'pending', // keep as pending with new date
+        }).eq('id', rescheduleId)
+      }
+      setAppointments((prev) =>
+        prev.map((apt) =>
+          apt.id === rescheduleId
+            ? { ...apt, preferred_date: newDate, preferred_time: newTime }
+            : apt
+        )
+      )
+      setRescheduleId(null)
+      setNewDate('')
+      setNewTime('')
+    } catch (err) {
+      console.error('Reschedule failed:', err)
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  async function handleCancel(id: string) {
+    setActionLoading(id)
+    try {
+      if (sb) {
+        await sb.from('appointments').update({ status: 'cancelled' }).eq('id', id)
+      }
+      setAppointments((prev) =>
+        prev.map((apt) => apt.id === id ? { ...apt, status: 'cancelled' } : apt)
+      )
+    } catch (err) {
+      console.error('Cancel failed:', err)
     } finally {
       setActionLoading(null)
     }
@@ -225,18 +265,25 @@ export default function AdminDashboardPage() {
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleAction(apt.id, 'confirm')}
+                          onClick={() => handleConfirm(apt.id)}
                           disabled={actionLoading === apt.id}
                           className="px-3 py-1 text-xs font-medium rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
                         >
                           Confirm
                         </button>
                         <button
-                          onClick={() => handleAction(apt.id, 'reschedule')}
+                          onClick={() => { setRescheduleId(apt.id); setNewDate(apt.preferred_date); setNewTime(apt.preferred_time); }}
                           disabled={actionLoading === apt.id}
                           className="px-3 py-1 text-xs font-medium rounded bg-yellow-500 text-white hover:bg-yellow-600 disabled:opacity-50 transition-colors"
                         >
                           Reschedule
+                        </button>
+                        <button
+                          onClick={() => handleCancel(apt.id)}
+                          disabled={actionLoading === apt.id}
+                          className="px-3 py-1 text-xs font-medium rounded bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 transition-colors"
+                        >
+                          ✕
                         </button>
                       </div>
                     </td>
@@ -247,6 +294,54 @@ export default function AdminDashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Reschedule Modal */}
+      {rescheduleId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-sm mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Reschedule Appointment</h3>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">New Date</label>
+                <input
+                  type="date"
+                  value={newDate}
+                  onChange={(e) => setNewDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">New Time</label>
+                <select
+                  value={newTime}
+                  onChange={(e) => setNewTime(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                >
+                  {['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'].map(t => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-3 mt-5">
+              <button
+                onClick={() => setRescheduleId(null)}
+                className="flex-1 px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleReschedule}
+                disabled={!newDate || !newTime}
+                className="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 disabled:opacity-50"
+              >
+                Save New Date
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
