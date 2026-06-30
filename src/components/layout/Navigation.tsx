@@ -25,7 +25,7 @@ const NAV_LINKS = [
   { id: "testimonials", href: "#testimonials" },
   { id: "blog", href: "#blog" },
   { id: "live-queue", href: "/token" },
-  { id: "appointment", href: "#appointment" },
+  { id: "appointment", href: "/book" },
   { id: "contact", href: "#contact" },
 ];
 

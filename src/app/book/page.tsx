@@ -1,3 +1,5 @@
+'use client'
+
 import { Navigation } from "@/components/layout/Navigation";
 import AppointmentForm from "@/components/forms/AppointmentForm";
 import Footer from "@/components/layout/Footer";
