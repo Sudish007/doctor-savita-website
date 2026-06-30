@@ -2,17 +2,23 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@supabase/supabase-js'
 
 /**
- * Simple admin login page with hardcoded password.
- * For production, replace with proper Supabase auth once JWT keys are available.
+ * Admin login page.
+ * Authenticates against:
+ * 1. Hardcoded master password (savita2025) — always works
+ * 2. admin_users table in Supabase (username + password)
  */
 
 const ADMIN_PASSWORD = 'savita2025'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const sb = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
 
 export default function AdminLoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -22,16 +28,42 @@ export default function AdminLoginPage() {
     setError(null)
     setLoading(true)
 
-    // Simple password check (temporary until Supabase auth works)
-    if (password === ADMIN_PASSWORD) {
-      // Set a cookie to maintain session
-      document.cookie = `admin_session=authenticated;path=/;max-age=86400`
-      router.push('/admin/dashboard')
-      router.refresh()
-    } else {
-      setError('Invalid password. Please try again.')
+    try {
+      // 1. Check master password first
+      if (password === ADMIN_PASSWORD) {
+        loginSuccess()
+        return
+      }
+
+      // 2. Check admin_users table in Supabase
+      if (sb && username.trim()) {
+        const { data: user, error: dbError } = await sb
+          .from('admin_users')
+          .select('id, username, role, password')
+          .eq('username', username.trim().toLowerCase())
+          .single()
+
+        if (!dbError && user && user.password === password) {
+          // Store role in cookie for access control
+          document.cookie = `admin_role=${user.role};path=/;max-age=86400`
+          loginSuccess()
+          return
+        }
+      }
+
+      // Failed
+      setError('Invalid username or password.')
+    } catch {
+      setError('Login failed. Please try again.')
+    } finally {
       setLoading(false)
     }
+  }
+
+  function loginSuccess() {
+    document.cookie = `admin_session=authenticated;path=/;max-age=86400`
+    router.push('/admin/dashboard')
+    router.refresh()
   }
 
   return (
@@ -47,20 +79,19 @@ export default function AdminLoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
-              Email
+              Username
             </label>
             <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-              placeholder="admin@example.com"
-              autoComplete="email"
+              placeholder="Enter username"
+              autoComplete="username"
             />
           </div>
 
@@ -96,6 +127,10 @@ export default function AdminLoginPage() {
           >
             {loading ? 'Signing in…' : 'Sign In'}
           </button>
+
+          <p className="text-xs text-center text-gray-400 dark:text-gray-500 mt-3">
+            Use your username & password, or master password to login
+          </p>
         </form>
       </div>
     </div>
