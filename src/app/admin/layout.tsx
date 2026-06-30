@@ -38,42 +38,31 @@ export default async function AdminLayout({
           <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
             Dr. Savita — Admin
           </h1>
-          <nav className="flex items-center gap-4 text-sm">
-            <a
-              href="/admin/dashboard"
-              className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-            >
+          <nav className="flex items-center gap-3 text-sm flex-wrap">
+            <a href="/admin/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
               Dashboard
             </a>
-            <a
-              href="/admin/contacts"
-              className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-            >
+            <a href="/admin/contacts" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
               Contacts
             </a>
-            <a
-              href="/admin/queue"
-              className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-            >
+            <a href="/admin/queue" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
               Queue
             </a>
-            <a
-              href="/admin/status"
-              className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-            >
+            <a href="/admin/status" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
               Status
             </a>
-            <a
-              href="/admin/videos"
-              className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-            >
+            <a href="/admin/videos" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
               Videos
             </a>
-            <a
-              href="/admin/timelines"
-              className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-            >
+            <a href="/admin/timelines" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
               Timelines
+            </a>
+            <a href="/admin/users" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors">
+              Users
+            </a>
+            <span className="w-px h-5 bg-gray-300 dark:bg-gray-600 mx-1"></span>
+            <a href="/api/admin/logout" className="px-3 py-1 rounded-lg text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50 transition-colors">
+              Logout
             </a>
           </nav>
         </div>
