@@ -772,7 +772,7 @@ export function AppointmentForm({ locale = 'en' }: AppointmentFormProps) {
                 <option value="">{labels.selectTime}</option>
                 {timeSlots.map((slot) => (
                   <option key={slot} value={slot}>
-                    {slot}
+                    {formatTimeTo12h(slot, locale)}
                   </option>
                 ))}
               </select>
@@ -952,6 +952,34 @@ function LoadingSpinner() {
       />
     </svg>
   )
+}
+
+/** Convert 24h time to 12h with period labels (AM/PM or Hindi: सुबह/दोपहर/शाम) */
+function formatTimeTo12h(time24: string, locale: string): string {
+  const [hourStr, minStr] = time24.split(':')
+  const hour = parseInt(hourStr, 10)
+  const minute = minStr
+
+  const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
+
+  if (locale === 'hi' || locale === 'bh') {
+    // Hindi/Bhojpuri periods
+    let period: string
+    if (hour >= 5 && hour < 12) {
+      period = 'सुबह'
+    } else if (hour >= 12 && hour < 16) {
+      period = 'दोपहर'
+    } else if (hour >= 16 && hour < 20) {
+      period = 'शाम'
+    } else {
+      period = 'रात'
+    }
+    return `${hour12}:${minute} ${period}`
+  }
+
+  // English
+  const period = hour >= 12 ? 'PM' : 'AM'
+  return `${hour12}:${minute} ${period}`
 }
 
 /** Shared input class names */

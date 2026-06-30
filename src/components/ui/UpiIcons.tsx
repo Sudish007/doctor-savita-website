@@ -55,7 +55,7 @@ export function BhimIcon({ className = 'w-8 h-8' }: IconProps) {
 export function AmazonPayIcon({ className = 'w-8 h-8' }: IconProps) {
   return (
     <img
-      src="https://img.icons8.com/color/96/amazon-pay.png"
+      src="https://img.icons8.com/color/96/amazon.png"
       alt="Amazon Pay"
       className={className + ' object-contain'}
       loading="eager"
