@@ -196,8 +196,9 @@ export function HealthTipsVideos() {
       </div>
 
       {/* Infinite Scrolling Marquee */}
+      <div className="container-content">
       <div
-        className="group relative"
+        className="group relative overflow-hidden rounded-2xl"
         aria-label="Health tips carousel"
       >
         {/* Fade edges */}
@@ -224,6 +225,7 @@ export function HealthTipsVideos() {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

@@ -126,7 +126,7 @@ export function ContactForm() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="glass-card p-6 md:p-8"
+      className="glass-card p-6 md:p-8 h-full flex flex-col"
     >
       <h3 className="text-fluid-h5 font-heading text-foreground mb-1">
         Send Us a Message
@@ -138,7 +138,7 @@ export function ContactForm() {
       <form
         onSubmit={handleSubmit(validateAndSubmit)}
         noValidate
-        className="space-y-4"
+        className="space-y-4 flex-1 flex flex-col"
       >
         {/* Name */}
         <div className="space-y-1.5">
@@ -184,7 +184,7 @@ export function ContactForm() {
         </div>
 
         {/* Message */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 flex-1 flex flex-col">
           <label htmlFor="contact-message" className="block text-fluid-body-sm font-medium text-foreground">
             Message <span className="text-destructive" aria-hidden="true">*</span>
           </label>
@@ -195,7 +195,7 @@ export function ContactForm() {
             placeholder="How can we help you?"
             aria-invalid={!!fieldErrors.message}
             aria-describedby={fieldErrors.message ? 'error-contact-message' : undefined}
-            className={inputClassName(!!fieldErrors.message) + ' resize-none'}
+            className={inputClassName(!!fieldErrors.message) + ' resize-none flex-1 min-h-[120px]'}
             {...register('message')}
           />
           {fieldErrors.message && (

@@ -323,7 +323,7 @@ export function Testimonials() {
             ease: "easeOut",
             delay: prefersReducedMotion ? 0 : 0.2,
           }}
-          className="max-w-4xl mx-auto px-6 md:px-10"
+          className="max-w-full mx-auto px-6 md:px-10"
         >
           <TestimonialCarousel
             itemCount={TESTIMONIALS.length}

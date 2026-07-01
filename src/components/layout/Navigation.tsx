@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ThemeToggle } from "./ThemeToggle";
@@ -18,69 +19,18 @@ import { LanguageToggle } from "./LanguageToggle";
  */
 
 const NAV_LINKS = [
-  { id: "home", href: "/" },
   { id: "about", href: "/about" },
   { id: "services", href: "/services" },
-  { id: "credentials", href: "/credentials" },
   { id: "testimonials", href: "/testimonials" },
   { id: "blog", href: "/blog" },
-  { id: "live-queue", href: "/token" },
-  { id: "appointment", href: "/book" },
   { id: "contact", href: "/contact" },
 ];
 
 export function Navigation() {
   const t = useTranslations('nav');
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
-  const [isScrolled, setIsScrolled] = useState(false);
   const navRef = useRef<HTMLElement>(null);
-
-  // Track scroll position for background opacity change
-  useEffect(() => {
-    function handleScroll() {
-      // When scrolled past ~100px (past hero top), increase opacity
-      setIsScrolled(window.scrollY > 100);
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Intersection Observer for active section highlighting
-  useEffect(() => {
-    const sectionIds = NAV_LINKS.map((link) => link.id);
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
-
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Find the entry with the largest intersection ratio
-        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
-        if (visibleEntries.length > 0) {
-          // Pick the one with highest intersectionRatio
-          const mostVisible = visibleEntries.reduce((prev, current) =>
-            current.intersectionRatio > prev.intersectionRatio ? current : prev
-          );
-          setActiveSection(mostVisible.target.id);
-        }
-      },
-      {
-        rootMargin: "-20% 0px -60% 0px",
-        threshold: [0, 0.25, 0.5, 0.75, 1],
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => {
-      sections.forEach((section) => observer.unobserve(section));
-    };
-  }, []);
 
   // Close mobile menu on resize to desktop
   useEffect(() => {
@@ -147,20 +97,18 @@ export function Navigation() {
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm border-b border-border-light" : "bg-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 bg-background shadow-sm border-b border-border-light"
       role="navigation"
       aria-label="Main navigation"
     >
       <div className="container-content flex items-center justify-between h-16 md:h-18">
         {/* Logo / Doctor Name */}
         <a
-          href="#home"
-          onClick={(e) => scrollToSection(e, "home")}
-          className="text-lg font-heading font-bold text-primary hover:text-primary-hover transition-colors whitespace-nowrap"
+          href="/"
+          className="text-lg font-heading font-bold text-primary hover:text-primary-hover transition-colors whitespace-nowrap flex items-center gap-1.5"
         >
-          Dr. Savita Kumari
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0"><path d="M12 2v20"/><path d="M8 6c0-1.1.9-2 2-2h4a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4h-4a2 2 0 0 1-2-2"/></svg>
+          Saubhagya Clinic
         </a>
 
         {/* Desktop Navigation Links */}
@@ -171,11 +119,11 @@ export function Navigation() {
                 href={link.href}
                 onClick={(e) => scrollToSection(e, link.id)}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  activeSection === link.id
-                    ? "text-primary bg-primary-light/60 dark:bg-primary-light/20"
+                  pathname === link.href
+                    ? "text-primary bg-primary-light/60 dark:bg-primary-light/20 border-b-2 border-primary"
                     : "text-foreground-secondary hover:text-primary hover:bg-primary-light/40 dark:hover:bg-primary-light/10"
                 }`}
-                aria-current={activeSection === link.id ? "true" : undefined}
+                aria-current={pathname === link.href ? "page" : undefined}
               >
                 {t(link.id)}
               </a>
@@ -185,15 +133,20 @@ export function Navigation() {
 
         {/* Right side: Appointment CTA + Theme Toggle + Language Toggle + Hamburger */}
         <div className="flex items-center gap-1">
-          {/* Appointment button - always visible */}
+          {/* Action buttons */}
           <a
             href="/book"
             className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:bg-primary-hover transition-colors shadow-sm"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-            </svg>
-            <span className="hidden sm:inline">{t('appointment')}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span className="hidden sm:inline">Book</span>
+          </a>
+          <a
+            href="/token"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5v2"/><path d="M15 11v2"/><path d="M15 17v2"/><path d="M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
+            <span className="hidden sm:inline">Token</span>
           </a>
           <ThemeToggle />
           <LanguageToggle />
@@ -281,11 +234,11 @@ export function Navigation() {
                     href={link.href}
                     onClick={(e) => scrollToSection(e, link.id)}
                     className={`block w-full text-center px-4 py-3 rounded-xl text-lg font-medium transition-colors ${
-                      activeSection === link.id
+                      pathname === link.href
                         ? "text-primary bg-primary-light/60 dark:bg-primary-light/20"
                         : "text-foreground-secondary hover:text-primary hover:bg-primary-light/40 dark:hover:bg-primary-light/10"
                     }`}
-                    aria-current={activeSection === link.id ? "true" : undefined}
+                    aria-current={pathname === link.href ? "page" : undefined}
                   >
                     {t(link.id)}
                   </a>
