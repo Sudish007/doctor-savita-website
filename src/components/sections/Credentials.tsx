@@ -273,7 +273,7 @@ export function Credentials() {
         </motion.div>
 
         {/* Timeline container */}
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative mx-auto">
           {/* Center line (desktop) / Left line (mobile) */}
           <motion.div
             ref={lineRef}

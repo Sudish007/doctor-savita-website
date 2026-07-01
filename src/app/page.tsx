@@ -26,16 +26,16 @@ export default function HomePage() {
         <SeasonalAlert />
         <Hero />
         <About />
-        <PhotoGallery />
-        <Services />
-        <Credentials />
-        <Testimonials />
-        <RemedyOfTheDay />
         <LiveQueue />
-        <CostEstimator />
-        <Payment />
-        <HealthTipsVideos />
         <AppointmentForm />
+        <Payment />
+        <Services />
+        <CostEstimator />
+        <PhotoGallery />
+        <Testimonials />
+        <Credentials />
+        <RemedyOfTheDay />
+        <HealthTipsVideos />
         <Contact />
         <Footer />
       </div>

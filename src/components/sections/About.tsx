@@ -151,71 +151,71 @@ export function About() {
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
         >
-          {/* Photo - Left on desktop, top on mobile */}
+          {/* Photo - Premium Doctor Badge Style */}
           <motion.div variants={itemVariants} className="flex justify-center">
-            <div className="relative w-full max-w-sm aspect-[3/4] rounded-3xl overflow-hidden shadow-elevation-3 border border-card-border">
-              {!imageError ? (
-                <Image
-                  src="/images/dr-savita-profile.jpg"
-                  alt="Dr. Savita Kumari"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                  priority={false}
-                  onError={() => setImageError(true)}
-                />
-              ) : (
-                /* Placeholder silhouette when image fails to load */
-                <div
-                  className="w-full h-full flex items-center justify-center bg-primary-light dark:bg-primary-light/20"
-                  aria-label="Dr. Savita Kumari - photo placeholder"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="120"
-                    height="120"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-primary/40"
-                  >
-                    <circle cx="12" cy="8" r="4" />
-                    <path d="M20 21a8 8 0 0 0-16 0" />
-                  </svg>
-                </div>
-              )}
+            <div className="relative">
+              {/* Outer glow ring */}
+              <div className="absolute -inset-2 bg-gradient-to-br from-primary/30 via-emerald-200/40 to-teal-300/30 rounded-3xl blur-sm"></div>
+              {/* Photo container */}
+              <div className="relative w-72 h-96 rounded-2xl overflow-hidden border-4 border-white dark:border-gray-700 shadow-xl bg-gray-100 dark:bg-gray-800">
+                {!imageError ? (
+                  <Image
+                    src="/images/dr-savita-profile.jpg"
+                    alt="Dr. Savita Kumari"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover object-top"
+                    priority={false}
+                    onError={() => setImageError(true)}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-primary-light dark:bg-primary-light/20" aria-label="Dr. Savita Kumari - photo placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-primary/40">
+                      <circle cx="12" cy="8" r="4" /><path d="M20 21a8 8 0 0 0-16 0" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              {/* Badge label */}
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-primary text-primary-foreground text-xs font-bold rounded-full shadow-lg whitespace-nowrap">
+                Medical Officer | Govt. of Bihar
+              </div>
             </div>
           </motion.div>
 
           {/* Biography Text - Right on desktop, below on mobile */}
           <motion.div variants={itemVariants} className="space-y-5">
             {/* Biography */}
-            <div className="space-y-3">
-              <p className="text-foreground-secondary leading-relaxed">
+            <div className="space-y-4">
+              <p className="text-foreground-secondary leading-relaxed text-lg">
                 {t('bioParagraph1')}
               </p>
               {t('bioParagraph2') && (
-                <p className="text-foreground-secondary leading-relaxed italic border-l-3 border-primary pl-4">
-                  {t('bioParagraph2')}
-                </p>
+                <div className="grid grid-cols-3 gap-3 pt-2">
+                  <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/10">
+                    <span className="text-2xl mb-1 block">🌱</span>
+                    <p className="text-xs font-medium text-foreground">Root Cause Focus</p>
+                  </div>
+                  <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/10">
+                    <span className="text-2xl mb-1 block">🎯</span>
+                    <p className="text-xs font-medium text-foreground">Personalized Care</p>
+                  </div>
+                  <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/10">
+                    <span className="text-2xl mb-1 block">💚</span>
+                    <p className="text-xs font-medium text-foreground">No Side Effects</p>
+                  </div>
+                </div>
               )}
             </div>
 
-            {/* Treatment Principles - compact inline */}
-            <div className="flex flex-wrap gap-2 pt-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent-light text-accent-foreground">
-                ✓ {t('principle1')}
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent-light text-accent-foreground">
-                ✓ {t('principle2')}
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent-light text-accent-foreground">
-                ✓ {t('principle3')}
-              </span>
-            </div>
+            {/* Treatment Principles - integrated into quote above */}
+
+            {/* Quote */}
+            <blockquote className="border-l-4 border-primary pl-4 py-2 bg-primary/5 rounded-r-lg">
+              <p className="text-foreground-secondary leading-relaxed italic text-sm">
+                &ldquo;{t('bioParagraph2')}&rdquo;
+              </p>
+            </blockquote>
           </motion.div>
         </motion.div>
 

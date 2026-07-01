@@ -62,7 +62,7 @@ const PRICING = [
   { label: 'Initial Consultation (In-Person)', amount: 300 },
   { label: 'Initial Consultation (Online)', amount: 200 },
   { label: 'Follow-up Visit', amount: 100 },
-  { label: 'Monthly Remedy Kit', amount: 200 },
+  { label: 'Monthly Remedy Kit', amount: 500 },
   { label: 'Online Consultation (30 min)', amount: 200 },
   { label: 'Video Consultation (20 min)', amount: 150 },
 ]
@@ -99,7 +99,7 @@ export function Payment() {
 
   return (
     <section id="payment" className="section-padding">
-      <div className="container-content max-w-5xl mx-auto">
+      <div className="container-content mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

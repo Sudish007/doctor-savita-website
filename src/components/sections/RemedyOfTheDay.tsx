@@ -46,7 +46,7 @@ export function RemedyOfTheDay() {
     >
       <div className="container-content flex justify-center">
         <motion.div
-          className="relative w-full max-w-2xl"
+          className="relative w-full max-w-5xl"
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-50px" }}

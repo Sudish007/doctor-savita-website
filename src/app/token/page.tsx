@@ -105,13 +105,13 @@ export default function TokenPage() {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 pt-20 pb-8">
+      <div className="flex-1 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 pt-16 pb-10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
+        className="w-full max-w-4xl"
       >
         {/* Header */}
         <div className="text-center mb-8">
@@ -259,6 +259,6 @@ export default function TokenPage() {
       </motion.div>
     </div>
     <Footer />
-    </>
+    </div>
   )
 }

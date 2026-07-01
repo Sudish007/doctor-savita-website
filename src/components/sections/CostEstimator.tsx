@@ -68,6 +68,7 @@ const labels: Record<Language, {
     monthlyRemedyKit: "Monthly Remedy Kit",
     onlineConsultation: "Online Consultation",
     videoConsultation: "Video Consultation",
+    whatsappQuery: "WhatsApp Query",
     inPerson: "In-Person",
     online: "Online",
     duration: "45-60 min",
@@ -105,6 +106,7 @@ const labels: Record<Language, {
     monthlyRemedyKit: "मासिक दवा किट",
     onlineConsultation: "ऑनलाइन परामर्श",
     videoConsultation: "वीडियो परामर्श",
+    whatsappQuery: "व्हाट्सएप प्रश्न",
     inPerson: "व्यक्तिगत",
     online: "ऑनलाइन",
     duration: "45-60 मिनट",
@@ -171,7 +173,7 @@ const PRICING_CARDS: PricingCard[] = [
   {
     id: "monthly-kit",
     nameKey: "monthlyRemedyKit",
-    price: 200,
+    price: 500,
     durationText: "Monthly supply",
     durationTextHi: "मासिक आपूर्ति",
     includesKeys: ["monthlyRemedy", "dosageGuide"],
@@ -191,6 +193,14 @@ const PRICING_CARDS: PricingCard[] = [
     durationText: "20 min",
     durationTextHi: "20 मिनट",
     includesKeys: ["videoCall20", "quickQuery"],
+  },
+  {
+    id: "whatsapp-query",
+    nameKey: "whatsappQuery",
+    price: 50,
+    durationText: "Text-based",
+    durationTextHi: "टेक्स्ट आधारित",
+    includesKeys: ["quickQuery", "chatFollowUp"],
   },
 ];
 
@@ -438,7 +448,7 @@ export function CostEstimator() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="glass-card p-6 md:p-8 rounded-2xl max-w-5xl mx-auto"
+          className="glass-card p-6 md:p-8 rounded-2xl"
         >
           {/* Calculator Header */}
           <div className="flex items-center gap-3 mb-6">

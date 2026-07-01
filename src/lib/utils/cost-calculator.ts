@@ -25,12 +25,12 @@ const PRICING: Record<
   "in-person": {
     initialFee: 300,
     followUpFee: 100,
-    monthlyKitFee: 200,
+    monthlyKitFee: 500,
   },
   online: {
     initialFee: 200,
     followUpFee: 100,
-    monthlyKitFee: 200,
+    monthlyKitFee: 500,
   },
 };
 
