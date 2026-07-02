@@ -13,7 +13,7 @@ type AdminRole = 'admin' | 'staff' | 'viewer'
 
 // Pages accessible by role
 const ROLE_ACCESS: Record<AdminRole, string[]> = {
-  admin: ['dashboard', 'contacts', 'queue', 'status', 'videos', 'timelines', 'users', 'blogs', 'settings'],
+  admin: ['dashboard', 'contacts', 'queue', 'status', 'videos', 'timelines', 'users', 'blogs', 'settings', 'materials'],
   staff: ['dashboard', 'contacts', 'queue', 'status'],
   viewer: ['dashboard', 'contacts'],
 }
@@ -76,6 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { id: 'users', label: 'Users', href: '/admin/users' },
     { id: 'blogs', label: 'Blogs', href: '/admin/blogs' },
     { id: 'settings', label: 'Settings', href: '/admin/settings' },
+    { id: 'materials', label: 'Materials', href: '/admin/materials' },
   ]
 
   // Filter nav links based on role

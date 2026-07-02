@@ -129,7 +129,7 @@ export function ContactForm() {
       className="glass-card p-6 md:p-8 h-full flex flex-col"
     >
       <h3 className="text-fluid-h5 font-heading text-foreground mb-1">
-        Send Us a Message
+        Get in Touch
       </h3>
       <p className="text-foreground-muted text-fluid-body-sm mb-5">
         Have a question? We&apos;d love to hear from you.

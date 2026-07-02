@@ -12,6 +12,7 @@ import { CostEstimator } from "@/components/sections/CostEstimator";
 import { Payment } from "@/components/sections/Payment";
 import { SeasonalAlert } from "@/components/sections/SeasonalAlert";
 import { HealthTipsVideos } from "@/components/sections/HealthTipsVideos";
+import { LearnSection } from "@/components/sections/LearnSection";
 import { Contact } from "@/components/sections/Contact";
 import ChatWidget from "@/components/chatbot/ChatWidget";
 import Footer from "@/components/layout/Footer";
@@ -34,6 +35,7 @@ export default function HomePage() {
         <PhotoGallery />
         <Testimonials />
         <Credentials />
+        <LearnSection />
         <RemedyOfTheDay />
         <HealthTipsVideos />
         <Contact />

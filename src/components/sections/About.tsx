@@ -229,7 +229,7 @@ export function About() {
         >
           <motion.div variants={itemVariants}>
             <AnimatedCounter
-              target={3}
+              target={2}
               suffix="+"
               label={t('yearsExperience')}
               icon={<ClockIcon />}

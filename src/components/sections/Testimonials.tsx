@@ -38,7 +38,7 @@ const TESTIMONIALS: Testimonial[] = [
     patientName: "Sunita Devi",
     condition: "Skin eczema and allergies",
     reviewText:
-      "My daughter had persistent eczema that did not respond to allopathic creams. Dr. Savita prescribed constitutional remedies and within 6 weeks, the skin cleared beautifully. Highly recommend her patience and expertise.",
+      "My daughter had persistent eczema that did not respond to modern medicine creams. Dr. Savita prescribed constitutional remedies and within 6 weeks, the skin cleared beautifully. Highly recommend her patience and expertise.",
     rating: 5,
   },
   {

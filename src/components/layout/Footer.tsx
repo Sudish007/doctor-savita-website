@@ -149,7 +149,7 @@ export default function Footer() {
           {/* Column 2: Clinic Info */}
           <div>
             <h3 className="text-fluid-h6 font-heading font-semibold text-foreground mb-3">
-              {t('clinicInfo')}
+              Private Clinic Info
             </h3>
             <address className="not-italic space-y-2.5 text-foreground-muted text-fluid-body-sm">
               <p className="flex items-start gap-2">
