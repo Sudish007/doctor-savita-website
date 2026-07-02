@@ -30,18 +30,10 @@ interface CredentialItem {
 
 const CREDENTIALS: CredentialItem[] = [
   {
-    id: "bsc",
-    title: "B.Sc. (Bachelor of Science)",
-    institution: "J.P. University, Chapra",
-    year: "",
-    type: "degree",
-    description: "Foundation in scientific principles and biological sciences.",
-  },
-  {
     id: "bhms",
     title: "BHMS (Bachelor of Homeopathic Medicine and Surgery)",
     institution: "Rameshwar Das Kedia Homoeopathic College",
-    year: "2025",
+    year: "",
     type: "degree",
     description:
       "Comprehensive training in homeopathic medicine, pharmacology, and clinical practice.",

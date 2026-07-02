@@ -7,6 +7,7 @@
     "testimonials": "Testimonials",
     "blog": "Blog",
     "live-queue": "Token",
+    "learn": "Learn",
     "appointment": "Appointment",
     "videoConsultation": "Video Consultation",
     "myAppointments": "My Appointments",
@@ -48,7 +49,7 @@
     "principle1": "Treating the root cause, not just symptoms",
     "principle2": "Personalized remedies based on individual constitution",
     "principle3": "Natural healing without side effects",
-    "bioParagraph1": "Dr. Savita Kumari (B.Sc., BHMS) is a Government-appointed Medical Officer under the AYUSH Department, Bihar. With expertise in both homeopathic and allopathic systems, she has treated 1000+ patients across chronic skin disorders, women's health, respiratory ailments, and child care. She provides free treatment at PHC Khujhwa and private consultations at Saubhagya Multispeciality Clinic, Siwan.",
+    "bioParagraph1": "Dr. Savita Kumari (BHMS) is a Government-appointed Medical Officer under the AYUSH Department, Bihar. With expertise in both homeopathic and modern medicine systems, she has treated 1000+ patients across chronic skin disorders, women's health, respiratory ailments, and child care. She provides free treatment at PHC Khujhwa and private consultations at Saubhagya Multispeciality Clinic, Siwan.",
     "bioParagraph2": "Treat the person, not just the disease. Every remedy is personalized to your unique body, mind, and lifestyle — natural healing from the root cause, without side effects.",
     "bioParagraph3": ""
   },
@@ -58,7 +59,7 @@
     "inPerson": "In-Person Consultation",
     "online": "Online Video Consultation",
     "ayushApproved": "All treatments follow AYUSH-approved homeopathic protocols",
-    "ayushNote": "All treatments follow AYUSH-approved protocols. Also qualified to prescribe allopathic medicines.",
+    "ayushNote": "All treatments follow AYUSH-approved protocols. Also qualified to prescribe modern medicine medicines.",
     "consultationNote": "Available for in-person consultation at Khujhwa, Siwan & online video consultation",
     "hideDetails": "Hide details",
     "viewApproach": "View approach",
@@ -171,7 +172,6 @@
   "credentials": {
     "title": "Qualifications & Credentials",
     "bhms": "Bachelor of Homeopathic Medicine and Surgery (BHMS)",
-    "bsc": "B.Sc. from J.P. University, Chapra",
     "position": "Medical Officer, AYUSH Department, Govt. of Bihar",
     "college": "Rameshwar Das Kedia Homoeopathic College"
   },

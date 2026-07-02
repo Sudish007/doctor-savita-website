@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 
@@ -23,16 +23,34 @@ const GALLERY_IMAGES = [
 
 export function PhotoGallery() {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const prefersReducedMotion = useReducedMotion()
 
-  const updateScrollState = useCallback(() => {
+  // Infinite loop: duplicate images (clone at start and end)
+  const loopedImages = [...GALLERY_IMAGES, ...GALLERY_IMAGES, ...GALLERY_IMAGES]
+
+  // On mount, scroll to the "real" first image (skip first set of clones)
+  useEffect(() => {
     const el = scrollRef.current
     if (!el) return
-    setCanScrollLeft(el.scrollLeft > 10)
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10)
+    // Each image is ~320px wide + 16px gap = 336px. Scroll past first clone set.
+    const oneSetWidth = GALLERY_IMAGES.length * 336
+    el.scrollLeft = oneSetWidth
+  }, [])
+
+  // On scroll, silently reset position for infinite effect
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    const oneSetWidth = GALLERY_IMAGES.length * 336
+    // If scrolled past 2 sets, jump back to 1 set
+    if (el.scrollLeft >= oneSetWidth * 2) {
+      el.scrollLeft = oneSetWidth
+    }
+    // If scrolled before start, jump to end of 1 set
+    if (el.scrollLeft <= 0) {
+      el.scrollLeft = oneSetWidth
+    }
   }, [])
 
   const scroll = useCallback((direction: 'left' | 'right') => {
@@ -73,7 +91,7 @@ export function PhotoGallery() {
           {/* Arrows */}
           <button
             onClick={() => scroll('left')}
-            disabled={!canScrollLeft}
+            
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex w-10 h-10 rounded-full items-center justify-center bg-card/90 backdrop-blur-sm border border-card-border shadow-lg hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Scroll left"
           >
@@ -81,7 +99,7 @@ export function PhotoGallery() {
           </button>
           <button
             onClick={() => scroll('right')}
-            disabled={!canScrollRight}
+            
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex w-10 h-10 rounded-full items-center justify-center bg-card/90 backdrop-blur-sm border border-card-border shadow-lg hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Scroll right"
           >
@@ -91,18 +109,18 @@ export function PhotoGallery() {
           {/* Scrollable images */}
           <div
             ref={scrollRef}
-            onScroll={updateScrollState}
+            onScroll={handleScroll}
             className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-2 py-4"
           >
-            {GALLERY_IMAGES.map((img, index) => (
+            {loopedImages.map((img, index) => (
               <motion.div
-                key={img.src}
+                key={`${img.src}-${index}`}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.05, duration: 0.4 }}
+                transition={{ delay: (index % GALLERY_IMAGES.length) * 0.05, duration: 0.4 }}
                 className="flex-shrink-0 snap-center cursor-pointer"
-                onClick={() => openLightbox(index)}
+                onClick={() => openLightbox(index % GALLERY_IMAGES.length)}
               >
                 <div className="relative w-[280px] h-[360px] md:w-[300px] md:h-[400px] rounded-2xl overflow-hidden shadow-elevation-3 border border-card-border group bg-muted">
                   <Image

@@ -22,7 +22,7 @@ const PREDEFINED_RESPONSES: Record<string, string> = {
   'joint|arthritis|pain|back|knee|gout':
     "Joint pain and arthritis can be effectively managed with homeopathy. Remedies like Rhus Tox, Bryonia, and Arnica help reduce inflammation and stiffness naturally.\n\nDr. Savita's constitutional approach addresses the root cause of joint problems rather than just managing symptoms.\n\n⚠️ This is not medical advice. Please book an appointment for proper assessment.",
   'diabetes|thyroid|chronic|bp|blood pressure':
-    "Chronic conditions like diabetes, thyroid disorders, and hypertension can be managed alongside homeopathic treatment. Constitutional remedies help improve overall metabolism and reduce dependency on medications over time.\n\nDr. Savita combines homeopathic and allopathic approaches for comprehensive chronic disease management.\n\n⚠️ This is not medical advice. Please book an appointment for proper diagnosis.",
+    "Chronic conditions like diabetes, thyroid disorders, and hypertension can be managed alongside homeopathic treatment. Constitutional remedies help improve overall metabolism and reduce dependency on medications over time.\n\nDr. Savita combines homeopathic and modern medicine approaches for comprehensive chronic disease management.\n\n⚠️ This is not medical advice. Please book an appointment for proper diagnosis.",
   'hello|hi|hey|namaste':
     "Namaste! 🙏 I'm Dr. Savita's AI assistant. I can help guide you about homeopathic treatments for various health concerns.\n\nYou can ask me about: skin problems, digestive issues, allergies, women's health, children's health, mental wellness, joint pain, or chronic diseases.\n\nHow can I assist you today?",
   'thanks|thank|bye|ok':
