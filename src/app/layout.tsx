@@ -4,6 +4,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import { Providers } from "@/components/providers/Providers";
 import { WhatsAppButton } from "@/components/shared/WhatsAppButton";
 import { GoogleAnalytics } from "@/components/shared/GoogleAnalytics";
+import { BottomNav } from "@/components/layout/BottomNav";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -119,6 +120,7 @@ export default async function RootLayout({
           <GoogleAnalytics />
           <main id="main-content">{children}</main>
           <WhatsAppButton />
+          <BottomNav />
         </Providers>
       </body>
     </html>
