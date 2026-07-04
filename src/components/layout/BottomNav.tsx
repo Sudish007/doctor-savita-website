@@ -83,17 +83,18 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
-    id: "chat",
-    href: "#chat",
+    id: "learn",
+    href: "/learn",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        <path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/>
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
       </svg>
     ),
     activeIcon: (
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
       </svg>
     ),
   },
@@ -125,13 +126,6 @@ export function BottomNav() {
   };
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) => {
-    if (item.href === "#chat") {
-      e.preventDefault();
-      // Toggle the chatbot widget
-      const chatBtn = document.querySelector('[data-chat-toggle]') as HTMLButtonElement;
-      if (chatBtn) chatBtn.click();
-      return;
-    }
     if (item.href === "#more") {
       e.preventDefault();
       // Open the hamburger menu
@@ -185,7 +179,7 @@ export function BottomNav() {
                 {item.id === "home" ? "Home" :
                  item.id === "book" ? "Book" :
                  item.id === "queue" ? "Queue" :
-                 item.id === "chat" ? "Ask AI" :
+                 item.id === "learn" ? "Learn" :
                  "More"}
               </span>
             </a>
