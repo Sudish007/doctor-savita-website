@@ -45,6 +45,13 @@
     overflow-x: hidden;
   }
 
+  /* Bottom nav spacing on mobile */
+  @media (max-width: 767px) {
+    body {
+      padding-bottom: 72px;
+    }
+  }
+
   /* Fluid Typography - Headings (Req 22.1, 22.4: Major Third ~1.25 scale) */
   h1 {
     font-family: var(--font-plus-jakarta), system-ui, sans-serif;
