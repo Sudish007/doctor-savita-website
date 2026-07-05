@@ -57,6 +57,7 @@ const MORE_LINKS = [
   { label: "Contact", href: "/contact", icon: "📞" },
   { label: "My Appointments", href: "/my-appointments", icon: "📋" },
   { label: "Credentials", href: "/credentials", icon: "🎓" },
+  { label: "Admin Panel", href: "/admin", icon: "⚙️" },
   { label: "Privacy Policy", href: "/privacy-policy", icon: "🔒" },
 ];
 
