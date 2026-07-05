@@ -90,25 +90,25 @@ export function Navigation() {
           ))}
         </ul>
 
-        {/* Right side: Appointment CTA + Theme Toggle + Language Toggle + Hamburger */}
-        <div className="hidden md:flex items-center gap-1">
-          {/* Action buttons - desktop only */}
+        {/* Right side: Theme Toggle + Language Toggle (visible on all) + Desktop extras */}
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <LanguageToggle />
+          {/* Desktop-only action buttons */}
           <a
             href="/book"
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:bg-primary-hover transition-colors shadow-sm"
+            className="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:bg-primary-hover transition-colors shadow-sm"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span className="hidden sm:inline">Book</span>
+            <span>Book</span>
           </a>
           <a
             href="/token"
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5v2"/><path d="M15 11v2"/><path d="M15 17v2"/><path d="M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
-            <span className="hidden sm:inline">Token</span>
+            <span>Token</span>
           </a>
-          <ThemeToggle />
-          <LanguageToggle />
         </div>
       </div>
 

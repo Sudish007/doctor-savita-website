@@ -17,7 +17,6 @@ import { Contact } from "@/components/sections/Contact";
 import ChatWidget from "@/components/chatbot/ChatWidget";
 import Footer from "@/components/layout/Footer";
 import AppointmentForm from "@/components/forms/AppointmentForm";
-import { StickyBookCard } from "@/components/shared/StickyBookCard";
 import { QueueBadge } from "@/components/shared/QueueBadge";
 import { TimeGreeting } from "@/components/shared/TimeGreeting";
 import { ClinicStatus } from "@/components/shared/ClinicStatus";
@@ -30,7 +29,6 @@ export default function HomePage() {
     <>
       <Navigation />
       <ScrollProgress />
-      <StickyBookCard />
       <div className="pt-16">
         <SeasonalAlert />
         {/* Personalized greeting + clinic status (mobile only) */}
