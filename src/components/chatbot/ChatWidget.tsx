@@ -182,7 +182,9 @@ export default function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 left-6 z-50 w-[360px] sm:w-[400px] h-[500px] 
+            className="fixed z-50 w-[360px] sm:w-[400px] h-[500px] 
+              bottom-[150px] right-4 md:bottom-24 md:left-6 md:right-auto
+              max-w-[calc(100vw-2rem)] max-h-[calc(100vh-200px)]
               rounded-2xl overflow-hidden
               backdrop-blur-xl bg-[var(--glass-bg-heavy)] 
               border border-[var(--glass-border)]
@@ -195,12 +197,19 @@ export default function ChatWidget() {
                 <div className="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center">
                   <span className="text-[var(--primary-foreground)] text-xs font-bold">AI</span>
                 </div>
-                <div>
+                <div className="flex-1">
                   <h3 className="text-sm font-semibold text-[var(--foreground)]">
                     Dr. Savita&apos;s Assistant
                   </h3>
                   <p className="text-xs text-[var(--foreground-muted)]">Homeopathic Guidance</p>
                 </div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--background-secondary)] transition-colors"
+                  aria-label="Close chat"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
               </div>
             </div>
 
