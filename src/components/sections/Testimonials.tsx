@@ -345,13 +345,25 @@ export function Testimonials() {
           }}
           className="text-center mt-10 md:mt-14"
         >
-          <a
-            href="#submit-review"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 shadow-elevation-2 hover:shadow-elevation-3 touch-target"
-          >
-            <PenIcon className="w-4 h-4" />
-            Submit a Review
-          </a>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="https://www.google.com/maps/place/Siwan,+Bihar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 shadow-elevation-2 hover:shadow-elevation-3 touch-target"
+            >
+              <PenIcon className="w-4 h-4" />
+              Review on Google
+            </a>
+            <a
+              href="https://wa.me/916204309476?text=Hi%20Dr.%20Savita%2C%20I%20want%20to%20share%20my%20experience%20about%20my%20treatment%20at%20Saubhagya%20Clinic."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold text-sm hover:bg-primary-light hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 touch-target"
+            >
+              💬 Share on WhatsApp
+            </a>
+          </div>
           <p className="text-sm text-foreground-muted mt-3">
             Share your experience to help other patients
           </p>
