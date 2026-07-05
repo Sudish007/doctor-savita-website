@@ -31,9 +31,8 @@ export function WhatsAppButton() {
       transition={{ duration: 0.4, delay: 1 }}
       whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
       whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
-      className="fixed bottom-5 right-5 z-50 md:bottom-5
-        bottom-[84px]
-        flex items-center justify-center
+      className="fixed bottom-5 right-5 z-50 hidden md:flex
+        items-center justify-center
         w-14 h-14 rounded-full
         bg-primary text-primary-foreground
         shadow-lg hover:shadow-xl hover:bg-primary-hover
