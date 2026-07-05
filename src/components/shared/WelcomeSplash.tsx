@@ -4,52 +4,64 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**
- * Welcome splash screen — shows the full Saubhagya Clinic logo on first app load.
- * Uses sessionStorage to only show once per session.
- * Fades out after 2 seconds with a smooth animation.
+ * Welcome splash screen — covers the blank white loading state.
+ * Shows immediately on mount (before Next.js hydration completes)
+ * and fades out once the page is ready.
+ *
+ * Uses sessionStorage so it only shows once per session.
+ * On subsequent navigations within the same session, it won't appear.
  */
 export function WelcomeSplash() {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   useEffect(() => {
-    // Only show once per session
+    // Check if already shown this session
     const hasShown = sessionStorage.getItem("splash_shown");
-    if (!hasShown) {
-      setShow(true);
-      sessionStorage.setItem("splash_shown", "1");
-      // Auto-dismiss after 2.5 seconds
-      setTimeout(() => setShow(false), 2500);
+    if (hasShown) {
+      setShow(false);
+      return;
     }
+
+    // Mark as shown
+    sessionStorage.setItem("splash_shown", "1");
+
+    // Dismiss after page is likely loaded (give it time to hydrate)
+    const timer = setTimeout(() => setShow(false), 1800);
+    return () => clearTimeout(timer);
   }, []);
+
+  // Don't render anything if already dismissed
+  if (!show) return null;
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ opacity: 1 }}
+          key="splash"
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#1B2D23] md:hidden"
+          transition={{ duration: 0.4 }}
+          className="fixed inset-0 z-[99999] flex flex-col items-center justify-center"
+          style={{ background: "#004123" }}
           onClick={() => setShow(false)}
         >
           {/* Logo */}
           <motion.img
             src="/images/logo.png"
             alt="Saubhagya Clinic"
-            className="w-40 h-40 rounded-full object-cover shadow-2xl shadow-emerald-900/50"
-            initial={{ scale: 0.8, opacity: 0 }}
+            className="w-32 h-32 rounded-full object-cover shadow-2xl"
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.3 }}
           />
 
-          {/* Clinic name */}
+          {/* Text */}
           <motion.div
-            className="mt-6 text-center"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+            className="mt-5 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
           >
-            <h1 className="text-2xl font-bold text-white tracking-wide">
+            <h1 className="text-xl font-bold text-white tracking-wide">
               Saubhagya Clinic
             </h1>
             <p className="text-sm text-emerald-300/80 mt-1">Dr. Savita Kumari</p>
@@ -58,23 +70,19 @@ export function WelcomeSplash() {
             </p>
           </motion.div>
 
-          {/* Loading dots */}
+          {/* Loading indicator */}
           <motion.div
-            className="mt-8 flex gap-1.5"
+            className="mt-6 flex gap-1.5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.4 }}
           >
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
-                className="w-2 h-2 rounded-full bg-emerald-400"
-                animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                }}
+                className="w-1.5 h-1.5 rounded-full bg-emerald-400"
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
               />
             ))}
           </motion.div>
