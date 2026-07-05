@@ -6,6 +6,8 @@ import { WhatsAppButton } from "@/components/shared/WhatsAppButton";
 import { GoogleAnalytics } from "@/components/shared/GoogleAnalytics";
 import { OfflineIndicator } from "@/components/shared/OfflineIndicator";
 import { WelcomeSplash } from "@/components/shared/WelcomeSplash";
+import { PullToRefresh } from "@/components/shared/PullToRefresh";
+import { SwipeNavigator } from "@/components/shared/SwipeNavigator";
 import { BottomNav } from "@/components/layout/BottomNav";
 import "./globals.css";
 
@@ -74,6 +76,8 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
+        {/* Service Worker Registration */}
+        <script dangerouslySetInnerHTML={{ __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}` }} />
         {/* JSON-LD Structured Data for SEO */}
         <script
           type="application/ld+json"
@@ -121,8 +125,11 @@ export default async function RootLayout({
         <Providers locale={locale} messages={messages}>
           <WelcomeSplash />
           <OfflineIndicator />
+          <PullToRefresh />
           <GoogleAnalytics />
-          <main id="main-content">{children}</main>
+          <SwipeNavigator>
+            <main id="main-content">{children}</main>
+          </SwipeNavigator>
           <WhatsAppButton />
           <BottomNav />
         </Providers>

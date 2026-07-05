@@ -5,7 +5,6 @@ const config: CapacitorConfig = {
   appName: 'Saubhagya Clinic',
   webDir: 'public',
   server: {
-    // Load from the live deployed website
     url: 'https://drsavitak.netlify.app',
     cleartext: false,
   },

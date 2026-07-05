@@ -52,6 +52,7 @@ const NAV_ITEMS: NavItem[] = [
 const MORE_LINKS = [
   { label: "About", href: "/about", icon: "👩‍⚕️", desc: "Dr. Savita's profile" },
   { label: "Services", href: "/services", icon: "💊", desc: "Treatments offered" },
+  { label: "Reminders", href: "/reminders", icon: "💊", desc: "Medicine alerts" },
   { label: "Testimonials", href: "/testimonials", icon: "⭐", desc: "Patient reviews" },
   { label: "Blog", href: "/blog", icon: "📝", desc: "Health articles" },
   { label: "Contact", href: "/contact", icon: "📞", desc: "Get in touch" },
