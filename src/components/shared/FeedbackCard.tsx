@@ -1,16 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /**
- * Post-visit feedback card — asks patients to rate their visit.
- * Shows after they've been to the clinic (could be triggered by queue completion).
- * Simple star rating + optional comment + Google review redirect.
+ * Post-visit feedback card.
+ * - Star rating stored in localStorage
+ * - If 4+ stars → prompt to leave Google review
+ * - If <4 stars → thank them, suggest WhatsApp for concerns
+ * - Persists across sessions so it doesn't keep asking
  */
+
+const STORAGE_KEY = "saubhagya_feedback_submitted";
+
 export function FeedbackCard() {
   const [rating, setRating] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [hoveredStar, setHoveredStar] = useState(0);
+  const [alreadyDone, setAlreadyDone] = useState(true); // hide by default until check
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      setAlreadyDone(true);
+    } else {
+      setAlreadyDone(false);
+    }
+  }, []);
+
+  function handleSubmit() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ rating, date: new Date().toISOString() }));
+    setSubmitted(true);
+  }
+
+  // Don't show if already submitted in a previous session
+  if (alreadyDone && !submitted) return null;
 
   if (submitted) {
     return (
@@ -20,14 +43,23 @@ export function FeedbackCard() {
         <p className="text-fluid-caption text-foreground-muted mt-1">
           Your feedback helps us serve you better.
         </p>
-        {rating >= 4 && (
+        {rating >= 4 ? (
           <a
-            href="https://g.page/r/YOUR_GOOGLE_REVIEW_LINK/review"
+            href="https://www.google.com/maps/place/Siwan,+Bihar"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary-hover transition-colors"
+            className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary-hover transition-colors shadow-sm"
           >
-            ⭐ Rate us on Google
+            ⭐ Rate us on Google Maps
+          </a>
+        ) : (
+          <a
+            href="https://wa.me/916204309476?text=Hi%20Dr.%20Savita%2C%20I%20have%20some%20feedback%20about%20my%20visit."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-xl bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors shadow-sm"
+          >
+            💬 Share feedback on WhatsApp
           </a>
         )}
       </div>
@@ -44,7 +76,7 @@ export function FeedbackCard() {
       </p>
 
       {/* Star rating */}
-      <div className="flex gap-1 mb-4">
+      <div className="flex gap-1 mb-4 justify-center">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
@@ -56,8 +88,8 @@ export function FeedbackCard() {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
+              width="36"
+              height="36"
               viewBox="0 0 24 24"
               fill={(hoveredStar || rating) >= star ? "#EAB308" : "none"}
               stroke={(hoveredStar || rating) >= star ? "#EAB308" : "currentColor"}
@@ -74,8 +106,8 @@ export function FeedbackCard() {
 
       {rating > 0 && (
         <button
-          onClick={() => setSubmitted(true)}
-          className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary-hover transition-colors"
+          onClick={handleSubmit}
+          className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover transition-colors shadow-sm active:scale-[0.98]"
         >
           Submit Feedback
         </button>
