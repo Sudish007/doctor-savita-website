@@ -137,6 +137,9 @@ export function BottomNav() {
       role="navigation"
       aria-label="Bottom navigation"
     >
+      {/* Fade gradient above nav */}
+      <div className="absolute -top-6 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+
       {/* Solid opaque background */}
       <div className="absolute inset-0 bg-background border-t border-border-light shadow-[0_-4px_20px_rgba(0,0,0,0.1)]" />
 
@@ -168,26 +171,28 @@ export function BottomNav() {
               key={item.id}
               href={item.href}
               prefetch={true}
-              className="relative flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all duration-200 active:scale-90"
+              className={`relative flex flex-col items-center gap-0.5 py-1.5 px-4 rounded-2xl transition-all duration-200 active:scale-90 ${
+                active ? "bg-primary/10" : ""
+              }`}
               aria-current={active ? "page" : undefined}
             >
               {/* Active indicator pill */}
               {active && (
                 <motion.div
                   layoutId="bottomNavIndicator"
-                  className="absolute -top-1 w-8 h-1 rounded-full bg-primary"
+                  className="absolute inset-0 rounded-2xl bg-primary/10"
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
               )}
 
               {/* Icon */}
-              <span className={`transition-colors duration-200 ${active ? "text-primary" : "text-foreground-muted"}`}>
+              <span className={`relative z-10 transition-all duration-200 ${active ? "text-primary scale-110" : "text-foreground-muted"}`}>
                 {active ? item.activeIcon : item.icon}
               </span>
 
               {/* Label */}
               <span
-                className={`text-[10px] font-medium transition-colors duration-200 ${
+                className={`relative z-10 text-[10px] font-semibold transition-colors duration-200 ${
                   active ? "text-primary" : "text-foreground-muted"
                 }`}
               >
