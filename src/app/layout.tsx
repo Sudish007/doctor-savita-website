@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers/Providers";
 import { WhatsAppButton } from "@/components/shared/WhatsAppButton";
 import { GoogleAnalytics } from "@/components/shared/GoogleAnalytics";
 import { OfflineIndicator } from "@/components/shared/OfflineIndicator";
+import { WelcomeSplash } from "@/components/shared/WelcomeSplash";
 import { BottomNav } from "@/components/layout/BottomNav";
 import "./globals.css";
 
@@ -118,6 +119,7 @@ export default async function RootLayout({
           Skip to main content
         </a>
         <Providers locale={locale} messages={messages}>
+          <WelcomeSplash />
           <OfflineIndicator />
           <GoogleAnalytics />
           <main id="main-content">{children}</main>

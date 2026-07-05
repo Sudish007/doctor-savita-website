@@ -51,10 +51,6 @@ export default function HomePage() {
         <CostEstimator />
         <PhotoGallery />
         <Testimonials />
-        <Credentials />
-        <LearnSection />
-        <RemedyOfTheDay />
-        <HealthTipsVideos />
         {/* Emergency contact + Share + Feedback (mobile) */}
         <div className="px-4 py-6 space-y-4 md:hidden">
           <EmergencyButton />
@@ -63,6 +59,10 @@ export default function HomePage() {
             <ShareApp />
           </div>
         </div>
+        <Credentials />
+        <LearnSection />
+        <RemedyOfTheDay />
+        <HealthTipsVideos />
         <Contact />
         <Footer />
       </div>

@@ -34,7 +34,7 @@ export function QueueBadge() {
     return () => clearInterval(interval);
   }, []);
 
-  if (count === null || count === 0) return null;
+  if (count === null) return null;
 
   return (
     <Link
@@ -49,7 +49,7 @@ export function QueueBadge() {
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent" />
       </span>
-      {count} patient{count !== 1 ? "s" : ""} in queue
+      {count > 0 ? `${count} patient${count !== 1 ? "s" : ""} in queue` : "Queue open — Join now"}
     </Link>
   );
 }
