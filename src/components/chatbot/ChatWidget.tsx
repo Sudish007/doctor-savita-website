@@ -153,12 +153,12 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating Chat Icon - Bottom Left */}
+      {/* Floating Chat Icon - Bottom Right */}
       <motion.button
         data-chat-toggle
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full 
-          md:bottom-6 bottom-[84px]
+        className="fixed z-50 w-14 h-14 rounded-full 
+          right-6 bottom-[84px] md:bottom-6 md:left-6 md:right-auto
           bg-[var(--primary)] text-[var(--primary-foreground)] 
           shadow-lg hover:shadow-xl
           flex items-center justify-center
