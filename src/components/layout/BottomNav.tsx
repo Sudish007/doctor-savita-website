@@ -50,20 +50,23 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const MORE_LINKS = [
-  { label: "About Dr. Savita", href: "/about", icon: "👩‍⚕️" },
-  { label: "Services", href: "/services", icon: "💊" },
-  { label: "Testimonials", href: "/testimonials", icon: "⭐" },
-  { label: "Blog", href: "/blog", icon: "📝" },
-  { label: "Contact", href: "/contact", icon: "📞" },
-  { label: "My Appointments", href: "/my-appointments", icon: "📋" },
-  { label: "Credentials", href: "/credentials", icon: "🎓" },
-  { label: "Admin Panel", href: "/admin", icon: "⚙️" },
-  { label: "Privacy Policy", href: "/privacy-policy", icon: "🔒" },
+  { label: "About", href: "/about", icon: "👩‍⚕️", desc: "Dr. Savita's profile" },
+  { label: "Services", href: "/services", icon: "💊", desc: "Treatments offered" },
+  { label: "Testimonials", href: "/testimonials", icon: "⭐", desc: "Patient reviews" },
+  { label: "Blog", href: "/blog", icon: "📝", desc: "Health articles" },
+  { label: "Contact", href: "/contact", icon: "📞", desc: "Get in touch" },
+  { label: "Appointments", href: "/my-appointments", icon: "📋", desc: "Your bookings" },
+  { label: "Credentials", href: "/credentials", icon: "🎓", desc: "Certifications" },
+  { label: "Admin Panel", href: "/admin", icon: "⚙️", desc: "Manage clinic" },
+  { label: "Privacy", href: "/privacy-policy", icon: "🔒", desc: "Data policy" },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
   const [showMore, setShowMore] = useState(false);
+
+  // Hide on admin pages (admin has its own bottom nav)
+  if (pathname?.startsWith("/admin")) return null;
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -92,34 +95,36 @@ export function BottomNav() {
               exit={{ opacity: 0, y: 100 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="fixed bottom-[72px] left-3 right-3 z-[59] md:hidden
-                bg-background rounded-2xl border border-border shadow-xl
-                max-h-[60vh] overflow-y-auto"
+                bg-background rounded-3xl border border-border shadow-2xl
+                max-h-[65vh] overflow-y-auto"
             >
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-heading font-semibold text-foreground">More</h3>
+              <div className="p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-base font-heading font-bold text-foreground">Explore</h3>
                   <button
                     onClick={() => setShowMore(false)}
-                    className="p-1.5 rounded-full hover:bg-background-secondary transition-colors"
+                    className="w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center hover:bg-primary/10 transition-colors"
                     aria-label="Close menu"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   </button>
                 </div>
-                <div className="grid grid-cols-1 gap-1">
+                <div className="grid grid-cols-3 gap-3">
                   {MORE_LINKS.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
+                      prefetch={true}
                       onClick={() => setShowMore(false)}
-                      className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-colors ${
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl transition-all active:scale-95 ${
                         pathname === link.href
-                          ? "bg-primary/10 text-primary"
-                          : "text-foreground-secondary hover:bg-background-secondary"
+                          ? "bg-primary/10 ring-1 ring-primary/30"
+                          : "bg-background-secondary hover:bg-primary/5"
                       }`}
                     >
-                      <span className="text-lg">{link.icon}</span>
-                      <span className="text-sm font-medium">{link.label}</span>
+                      <span className="text-2xl">{link.icon}</span>
+                      <span className="text-[11px] font-semibold text-foreground text-center leading-tight">{link.label}</span>
+                      <span className="text-[9px] text-foreground-muted text-center leading-tight">{link.desc}</span>
                     </Link>
                   ))}
                 </div>
