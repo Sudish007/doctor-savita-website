@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 /**
@@ -125,14 +125,10 @@ export function BottomNav() {
     return pathname.startsWith(href);
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) => {
-    if (item.href === "#more") {
-      e.preventDefault();
-      // Open the hamburger menu
-      const menuBtn = document.querySelector('[aria-label="Open navigation menu"]') as HTMLButtonElement;
-      if (menuBtn) menuBtn.click();
-      return;
-    }
+  const handleMoreClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const menuBtn = document.querySelector('[aria-label="Open navigation menu"]') as HTMLButtonElement;
+    if (menuBtn) menuBtn.click();
   };
 
   return (
@@ -141,18 +137,37 @@ export function BottomNav() {
       role="navigation"
       aria-label="Bottom navigation"
     >
-      {/* Glassmorphism background */}
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-xl border-t border-border-light shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" />
+      {/* Solid opaque background */}
+      <div className="absolute inset-0 bg-background border-t border-border-light shadow-[0_-4px_20px_rgba(0,0,0,0.1)]" />
 
       {/* Navigation items */}
       <div className="relative flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom,8px)] pt-2">
         {NAV_ITEMS.map((item) => {
           const active = isActive(item.href);
+
+          // "More" button uses onClick instead of navigation
+          if (item.href === "#more") {
+            return (
+              <button
+                key={item.id}
+                onClick={handleMoreClick}
+                className="relative flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all duration-200 active:scale-90"
+              >
+                <span className="text-foreground-muted">
+                  {item.icon}
+                </span>
+                <span className="text-[10px] font-medium text-foreground-muted">
+                  More
+                </span>
+              </button>
+            );
+          }
+
           return (
-            <a
+            <Link
               key={item.id}
               href={item.href}
-              onClick={(e) => handleClick(e, item)}
+              prefetch={true}
               className="relative flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all duration-200 active:scale-90"
               aria-current={active ? "page" : undefined}
             >
@@ -179,10 +194,9 @@ export function BottomNav() {
                 {item.id === "home" ? "Home" :
                  item.id === "book" ? "Book" :
                  item.id === "queue" ? "Queue" :
-                 item.id === "learn" ? "Learn" :
-                 "More"}
+                 "Learn"}
               </span>
-            </a>
+            </Link>
           );
         })}
       </div>
