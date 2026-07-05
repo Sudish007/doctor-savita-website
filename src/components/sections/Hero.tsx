@@ -84,7 +84,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[60vh] md:min-h-[70vh] lg:min-h-0 lg:py-20 flex items-center overflow-hidden"
+      className="relative min-h-[85vh] md:min-h-[70vh] lg:min-h-0 lg:py-20 flex items-center overflow-hidden"
       aria-label="Hero section"
     >
       {/* Gradient background with parallax */}
@@ -229,7 +229,7 @@ export function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80">
+            <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-72 md:h-72 lg:w-80 lg:h-80">
               {/* Decorative ring */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sage-300 to-emerald-300 dark:from-sage-700 dark:to-emerald-700 p-1">
                 <div className="w-full h-full rounded-full overflow-hidden bg-background relative">

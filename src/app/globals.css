@@ -206,6 +206,21 @@
     text-wrap: balance;
   }
 
+  /* Enhanced card elevation — makes sections pop */
+  .card-elevated {
+    @apply rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300;
+    background: var(--card, var(--background));
+  }
+
+  /* Slow pulse for queue badge */
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+  }
+
   /* Shimmer border animation for Remedy of the Day card (Req 28.3) */
   .shimmer-border {
     background: linear-gradient(
