@@ -45,14 +45,18 @@ export function WelcomeSplash() {
           onClick={() => setShow(false)}
         >
           {/* Logo */}
-          <motion.img
-            src="/images/logo.png"
-            alt="Saubhagya Clinic"
-            className="w-32 h-32 rounded-full object-cover shadow-2xl"
+          <motion.div
+            className="w-32 h-32 rounded-full overflow-hidden shadow-2xl flex items-center justify-center"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
-          />
+          >
+            <img
+              src="/images/logo.png"
+              alt="Saubhagya Clinic"
+              className="w-[140%] h-[140%] object-cover"
+            />
+          </motion.div>
 
           {/* Text */}
           <motion.div

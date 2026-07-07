@@ -66,7 +66,9 @@ export function Navigation() {
           href="/"
           className="text-lg font-heading font-bold text-primary hover:text-primary-hover transition-colors whitespace-nowrap flex items-center gap-1.5"
         >
-          <img src="/images/logo.png" alt="Saubhagya Clinic Logo" className="w-8 h-8 rounded-full object-cover" />
+          <span className="w-8 h-8 rounded-full overflow-hidden inline-flex items-center justify-center flex-shrink-0">
+            <img src="/images/logo.png" alt="Saubhagya Clinic Logo" className="w-[140%] h-[140%] object-cover" />
+          </span>
           Saubhagya Clinic
         </a>
 

@@ -24,6 +24,7 @@
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
     "ai": "^7.0.4",
+    "capacitor-native-settings": "^8.1.0",
     "framer-motion": "^12.42.0",
     "html2canvas": "^1.4.1",
     "next": "14.2.35",

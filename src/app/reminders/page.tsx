@@ -95,6 +95,24 @@ export default function RemindersPage() {
     }
   };
 
+  const openNotificationSettings = async () => {
+    try {
+      // Use capacitor-native-settings to open the app's notification settings directly
+      const { NativeSettings, AndroidSettings, IOSSettings } = await import("capacitor-native-settings");
+      await NativeSettings.open({
+        optionAndroid: AndroidSettings.AppNotification,
+        optionIOS: IOSSettings.AppNotification,
+      });
+    } catch {
+      // Fallback for browser / if plugin not available
+      alert(
+        "To enable notifications for Saubhagya Clinic:\n\n" +
+        "📱 Android: Settings → Apps → Saubhagya Clinic → Notifications → Enable\n\n" +
+        "🌐 Browser: Tap the lock icon (🔒) in the address bar → Site settings → Notifications → Allow"
+      );
+    }
+  };
+
   const addReminder = useCallback(() => {
     if (!name.trim()) return;
     const newReminder: Reminder = {
@@ -133,15 +151,38 @@ export default function RemindersPage() {
         {/* Notification Permission */}
         {notifPermission !== "granted" && (
           <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-2xl">
-            <p className="text-sm text-amber-800 dark:text-amber-200 mb-3">
-              Enable notifications to get medicine alerts on time.
-            </p>
-            <button
-              onClick={requestPermission}
-              className="px-4 py-2 bg-amber-500 text-white text-sm font-semibold rounded-xl hover:bg-amber-600 transition-colors"
-            >
-              Enable Notifications
-            </button>
+            {notifPermission === "denied" ? (
+              <>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🔕</span>
+                  <p className="text-sm font-semibold text-red-700 dark:text-red-300">
+                    Notifications are blocked
+                  </p>
+                </div>
+                <p className="text-sm text-amber-800 dark:text-amber-200 mb-3">
+                  Notifications are disabled for Saubhagya. Please enable them in your device/browser settings to receive medicine reminders.
+                </p>
+                <button
+                  onClick={openNotificationSettings}
+                  className="px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-xl hover:bg-red-600 transition-colors flex items-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 10 3.17V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  Open Notification Settings
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-amber-800 dark:text-amber-200 mb-3">
+                  Enable notifications to get medicine alerts on time.
+                </p>
+                <button
+                  onClick={requestPermission}
+                  className="px-4 py-2 bg-amber-500 text-white text-sm font-semibold rounded-xl hover:bg-amber-600 transition-colors"
+                >
+                  Enable Notifications
+                </button>
+              </>
+            )}
           </div>
         )}
 
