@@ -54,7 +54,7 @@ export function WelcomeSplash() {
             <img
               src="/images/logo.png"
               alt="Saubhagya Clinic"
-              className="w-[140%] h-[140%] object-cover"
+              className="w-[170%] h-[170%] object-cover -mt-[5%]"
             />
           </motion.div>
 
