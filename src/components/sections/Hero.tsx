@@ -22,7 +22,7 @@ import { AvailabilityBadge } from '@/components/shared/AvailabilityBadge'
  * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 15.3, 16.4, 26.1, 26.3, 26.4, 26.5
  */
 
-const PHOTO_URL = '/images/dr-savita-profile.jpg'
+const PHOTO_URL = '/images/dr-savita-hero.jpg'
 
 /** Placeholder silhouette SVG rendered inline as fallback */
 function PlaceholderSilhouette() {
