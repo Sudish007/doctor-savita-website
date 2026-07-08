@@ -241,7 +241,7 @@ export function Hero() {
                       alt={t('doctorName')}
                       fill
                       sizes="(max-width: 640px) 224px, (max-width: 768px) 256px, (max-width: 1024px) 288px, 320px"
-                      className="object-contain rounded-full"
+                      className="object-cover object-center rounded-full"
                       priority
                       onError={() => setImageError(true)}
                     />
