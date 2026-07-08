@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Navigation } from "@/components/layout/Navigation";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -7,7 +8,9 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-background py-12 px-4 md:px-8">
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-background pt-16 md:pt-20 pb-24 px-4 md:px-8">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-fluid-h2 font-heading font-bold text-foreground mb-2">
           Privacy Policy
@@ -204,5 +207,6 @@ export default function PrivacyPolicyPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

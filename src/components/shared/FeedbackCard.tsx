@@ -45,7 +45,7 @@ export function FeedbackCard() {
         </p>
         {rating >= 4 ? (
           <a
-            href="https://www.google.com/maps/place/Siwan,+Bihar"
+            href="https://share.google/dJHZ9F9fnstzE6zAk"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary-hover transition-colors shadow-sm"

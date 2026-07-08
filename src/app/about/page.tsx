@@ -1,16 +1,14 @@
 'use client'
-import { Navigation } from '@/components/layout/Navigation'
 import { About } from '@/components/sections/About'
-import Footer from '@/components/layout/Footer'
+import { Navigation } from "@/components/layout/Navigation"
 
 export default function AboutPage() {
   return (
     <>
       <Navigation />
-      <div className="pt-16 min-h-screen bg-background">
+      <div className="pt-16 md:pt-20 pb-24 min-h-screen bg-background">
         <About />
       </div>
-      <Footer />
     </>
   )
 }

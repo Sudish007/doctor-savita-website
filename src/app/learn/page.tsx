@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { createClient } from '@supabase/supabase-js'
-import { Navigation } from '@/components/layout/Navigation'
-import Footer from '@/components/layout/Footer'
+import { Navigation } from "@/components/layout/Navigation"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -62,9 +61,10 @@ export default function LearnPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Navigation />
-      <div className="flex-1 pt-16 pb-12 bg-background">
+      <div className="min-h-screen flex flex-col">
+      <div className="flex-1 pt-16 md:pt-20 pb-24 bg-background">
         <div className="container-content">
           {/* Hero Section */}
           <motion.div
@@ -326,7 +326,7 @@ export default function LearnPage() {
           )}
         </div>
       </div>
-      <Footer />
     </div>
+    </>
   )
 }

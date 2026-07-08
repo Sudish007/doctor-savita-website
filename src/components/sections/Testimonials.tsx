@@ -347,7 +347,7 @@ export function Testimonials() {
         >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
-              href="https://www.google.com/maps/place/Siwan,+Bihar"
+              href="https://share.google/dJHZ9F9fnstzE6zAk"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 shadow-elevation-2 hover:shadow-elevation-3 touch-target"

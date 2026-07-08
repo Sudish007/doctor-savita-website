@@ -66,8 +66,8 @@ export function Navigation() {
           href="/"
           className="text-lg font-heading font-bold text-primary hover:text-primary-hover transition-colors whitespace-nowrap flex items-center gap-1.5"
         >
-          <span className="w-8 h-8 rounded-full overflow-hidden inline-flex items-center justify-center flex-shrink-0 bg-[#004123]">
-            <img src="/images/logo.png" alt="Saubhagya Clinic Logo" className="w-[95%] h-[95%] object-contain" />
+          <span className="w-8 h-8 rounded-full overflow-hidden inline-flex items-center justify-center flex-shrink-0">
+            <img src="/images/logo.png" alt="Saubhagya Clinic Logo" className="w-full h-full object-cover" />
           </span>
           Saubhagya Clinic
         </a>

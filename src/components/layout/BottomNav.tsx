@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**
@@ -50,21 +51,31 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const MORE_LINKS = [
-  { label: "About", href: "/about", icon: "👩‍⚕️", desc: "Dr. Savita's profile" },
-  { label: "Services", href: "/services", icon: "💊", desc: "Treatments offered" },
-  { label: "Reminders", href: "/reminders", icon: "💊", desc: "Medicine alerts" },
-  { label: "Testimonials", href: "/testimonials", icon: "⭐", desc: "Patient reviews" },
-  { label: "Blog", href: "/blog", icon: "📝", desc: "Health articles" },
-  { label: "Contact", href: "/contact", icon: "📞", desc: "Get in touch" },
-  { label: "Appointments", href: "/my-appointments", icon: "📋", desc: "Your bookings" },
-  { label: "Credentials", href: "/credentials", icon: "🎓", desc: "Certifications" },
+  { label: "About", href: "/about", icon: "🩺", desc: "Dr. Savita's profile" },
+  { label: "Services", href: "/services", icon: "🌿", desc: "Treatments offered" },
+  { label: "Reminders", href: "/reminders", icon: "⏰", desc: "Medicine alerts" },
+  { label: "Testimonials", href: "/testimonials", icon: "💬", desc: "Patient reviews" },
+  { label: "Blog", href: "/blog", icon: "📰", desc: "Health articles" },
+  { label: "Contact", href: "/contact", icon: "📲", desc: "Get in touch" },
+  { label: "Appointments", href: "/my-appointments", icon: "🗓️", desc: "Your bookings" },
+  { label: "Credentials", href: "/credentials", icon: "🏅", desc: "Certifications" },
   { label: "Admin Panel", href: "/admin", icon: "⚙️", desc: "Manage clinic" },
-  { label: "Privacy", href: "/privacy-policy", icon: "🔒", desc: "Data policy" },
+  { label: "Privacy", href: "/privacy-policy", icon: "🛡️", desc: "Data policy" },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const [showMore, setShowMore] = useState(false);
+
+  // Aggressively prefetch all routes on mount for instant navigation
+  useEffect(() => {
+    const allRoutes = [
+      ...NAV_ITEMS.filter(i => i.href !== "#more").map(i => i.href),
+      ...MORE_LINKS.map(l => l.href),
+    ];
+    allRoutes.forEach(route => router.prefetch(route));
+  }, [router]);
 
   // Hide on admin pages (admin has its own bottom nav)
   if (pathname?.startsWith("/admin")) return null;
@@ -91,10 +102,10 @@ export function BottomNav() {
             />
             {/* Menu panel */}
             <motion.div
-              initial={{ opacity: 0, y: 100 }}
+              initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              exit={{ opacity: 0, y: 50 }}
+              transition={{ duration: 0.15 }}
               className="fixed bottom-[72px] left-3 right-3 z-[59] md:hidden
                 bg-background rounded-3xl border border-border shadow-2xl
                 max-h-[65vh] overflow-y-auto"
@@ -187,10 +198,8 @@ export function BottomNav() {
               >
                 {/* Active pill background */}
                 {active && (
-                  <motion.div
-                    layoutId="bottomNavIndicator"
+                  <div
                     className="absolute inset-0 rounded-2xl bg-primary/10"
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
 

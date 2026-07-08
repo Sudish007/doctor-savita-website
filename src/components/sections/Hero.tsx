@@ -229,7 +229,7 @@ export function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-72 md:h-72 lg:w-80 lg:h-80">
+            <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-80 md:h-80 lg:w-[22rem] lg:h-[22rem]">
               {/* Decorative ring */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sage-300 to-emerald-300 dark:from-sage-700 dark:to-emerald-700 p-1">
                 <div className="w-full h-full rounded-full overflow-hidden bg-background relative">
@@ -241,7 +241,7 @@ export function Hero() {
                       alt={t('doctorName')}
                       fill
                       sizes="(max-width: 640px) 224px, (max-width: 768px) 256px, (max-width: 1024px) 288px, 320px"
-                      className="object-cover object-center rounded-full"
+                      className="object-cover object-top rounded-full"
                       priority
                       onError={() => setImageError(true)}
                     />
