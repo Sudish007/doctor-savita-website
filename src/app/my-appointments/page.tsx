@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { createClient } from '@supabase/supabase-js'
-import { Navigation } from '@/components/layout/Navigation'
-import Footer from '@/components/layout/Footer'
+import { Navigation } from "@/components/layout/Navigation"
+
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -83,8 +83,8 @@ export default function MyAppointmentsPage() {
   return (
     <>
       <Navigation />
-      <div className="pt-20 pb-12 min-h-screen bg-background">
-        <div className="container-content max-w-4xl mx-auto">
+      <div className="pt-16 md:pt-20 pb-24 min-h-screen bg-background">
+      <div className="container-content max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-foreground mb-2">📋 My Appointments</h1>
@@ -192,7 +192,6 @@ export default function MyAppointmentsPage() {
           )}
         </div>
       </div>
-      <Footer />
     </>
   )
 }

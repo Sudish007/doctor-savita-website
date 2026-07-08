@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { createClient } from '@supabase/supabase-js'
-import { Navigation } from '@/components/layout/Navigation'
-import Footer from '@/components/layout/Footer'
+import { Navigation } from "@/components/layout/Navigation"
 
 /**
  * Standalone Token Page — /token
@@ -105,9 +104,10 @@ export default function TokenPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Navigation />
-      <div className="flex-1 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 pt-16 pb-10">
+      <div className="min-h-screen flex flex-col">
+      <div className="flex-1 bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 pt-16 md:pt-20 pb-24">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -180,7 +180,7 @@ export default function TokenPage() {
 
               {/* Footer - Clinic Address */}
               <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700/30 text-center">
-                <p className="text-xs text-gray-500 dark:text-gray-400">📍 Near BL Public School, Village Pipra, Siwan</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">📍 Near Pipra Garhi, Village Pipra, Siwan</p>
                 <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Valid for today&apos;s session only</p>
               </div>
             </div>
@@ -258,7 +258,7 @@ export default function TokenPage() {
         )}
       </motion.div>
     </div>
-    <Footer />
     </div>
+    </>
   )
 }

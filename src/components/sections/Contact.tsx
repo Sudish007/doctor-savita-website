@@ -86,7 +86,7 @@ export function Contact() {
                     Saubhagya Multispeciality Clinic (Private)
                   </h4>
                   <p className="text-foreground-muted text-fluid-body-sm">
-                    Near BL Public School, Village Pipra,
+                    Near Pipra Garhi, Village Pipra,
                   </p>
                   <p className="text-foreground-muted text-fluid-body-sm">
                     Post Khedhay, PS Andar, Siwan, Bihar

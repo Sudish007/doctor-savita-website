@@ -46,7 +46,7 @@ export function WelcomeSplash() {
         >
           {/* Logo */}
           <motion.div
-            className="w-32 h-32 rounded-full overflow-hidden shadow-2xl flex items-center justify-center bg-[#004123]"
+            className="w-32 h-32 rounded-full overflow-hidden shadow-2xl"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
@@ -54,7 +54,7 @@ export function WelcomeSplash() {
             <img
               src="/images/logo.png"
               alt="Saubhagya Clinic"
-              className="w-[95%] h-[95%] object-contain"
+              className="w-full h-full object-cover"
             />
           </motion.div>
 

@@ -51,7 +51,7 @@ export async function sendPatientConfirmationEmail(
             ${data.paymentStatus ? `<p style="margin: 4px 0;"><strong>💳 Payment:</strong> ${data.paymentStatus === 'paid' ? 'Paid via UPI' : 'Pay at Clinic'}</p>` : ''}
           </div>
           
-          <p><strong>📍 Clinic:</strong> Saubhagya Multispeciality Clinic, Near BL Public School, Village Pipra, Siwan</p>
+          <p><strong>📍 Clinic:</strong> Saubhagya Multispeciality Clinic, Near Pipra Garhi, Village Pipra, Siwan</p>
           <p><strong>📞 Contact:</strong> +91 62043 09476</p>
           
           <p style="color: #666; font-size: 13px;">Please arrive 10 minutes before your scheduled time. The clinic will contact you within 24 hours to confirm.</p>

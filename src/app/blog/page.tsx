@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Navigation } from '@/components/layout/Navigation'
-import Footer from '@/components/layout/Footer'
+import { Navigation } from "@/components/layout/Navigation"
+
 
 interface BlogPost {
   id: string
@@ -92,8 +92,8 @@ export default function BlogPage() {
   return (
     <>
       <Navigation />
-      <div className="pt-20 pb-12 min-h-screen bg-background">
-        <div className="container-content max-w-4xl">
+      <div className="pt-16 md:pt-20 pb-24 min-h-screen bg-background">
+      <div className="container-content max-w-4xl">
           {/* Header */}
           <div className="text-center mb-8">
             <a href="/" className="text-sm text-primary hover:underline mb-2 inline-block">← Back to website</a>
@@ -179,9 +179,8 @@ export default function BlogPage() {
               📅 Book Consultation with Dr. Savita
             </a>
           </div>
-        </div>
       </div>
-      <Footer />
+    </div>
     </>
   )
 }
