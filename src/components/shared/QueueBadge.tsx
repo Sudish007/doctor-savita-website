@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
 /**
  * Live queue badge — shows "X patients waiting" on the homepage.
@@ -15,9 +15,9 @@ export function QueueBadge() {
   useEffect(() => {
     async function fetchQueue() {
       try {
-        const sb = createClient();
+        if (!supabase) return;
         const today = new Date().toISOString().split("T")[0];
-        const { count: queueCount } = await sb
+        const { count: queueCount } = await supabase
           .from("queue_subscriptions")
           .select("*", { count: "exact", head: true })
           .eq("status", "waiting")
