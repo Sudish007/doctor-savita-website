@@ -184,7 +184,7 @@ export default function PrivacyPolicyPage() {
               <p>Village Pipra, Post Khedhay, PS Andar</p>
               <p>Siwan, Bihar, India</p>
               <p className="mt-2">
-                Phone: <a href="tel:+916204309476" className="text-primary hover:underline">+91 6204309476</a>
+                Phone: <a href="tel:+919870176701" className="text-primary hover:underline">+91 9870176701</a>
               </p>
               <p>
                 WhatsApp: <a href="https://wa.me/919971585873" className="text-primary hover:underline">+91 9971585873</a>
