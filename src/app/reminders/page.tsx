@@ -51,47 +51,84 @@ export default function RemindersPage() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
   }, [reminders]);
 
-  // Set up notification timers
+  // Schedule native local notifications using Capacitor
   useEffect(() => {
-    if (notifPermission !== "granted" || reminders.length === 0) return;
+    if (reminders.length === 0) return;
 
-    const timers: NodeJS.Timeout[] = [];
+    async function scheduleNativeNotifications() {
+      try {
+        const { LocalNotifications } = await import("@capacitor/local-notifications");
+        
+        // Check/request permission
+        const permResult = await LocalNotifications.checkPermissions();
+        if (permResult.display !== "granted") {
+          const reqResult = await LocalNotifications.requestPermissions();
+          if (reqResult.display !== "granted") {
+            setNotifPermission("denied");
+            return;
+          }
+        }
+        setNotifPermission("granted");
 
-    function scheduleNotification(reminder: Reminder) {
-      const now = new Date();
-      const [hours, minutes] = reminder.time.split(":").map(Number);
-      const target = new Date();
-      target.setHours(hours, minutes, 0, 0);
+        // Cancel all existing scheduled notifications
+        const pending = await LocalNotifications.getPending();
+        if (pending.notifications.length > 0) {
+          await LocalNotifications.cancel(pending);
+        }
 
-      // If time already passed today, schedule for tomorrow
-      if (target.getTime() <= now.getTime()) {
-        target.setDate(target.getDate() + 1);
-      }
+        // Schedule each reminder as a daily repeating notification
+        const notifications = reminders.map((reminder, index) => {
+          const [hours, minutes] = reminder.time.split(":").map(Number);
+          const now = new Date();
+          const target = new Date();
+          target.setHours(hours, minutes, 0, 0);
 
-      const delay = target.getTime() - now.getTime();
+          // If time already passed today, schedule for tomorrow
+          if (target.getTime() <= now.getTime()) {
+            target.setDate(target.getDate() + 1);
+          }
 
-      const timer = setTimeout(() => {
-        new Notification("💊 Medicine Reminder", {
-          body: `Time to take: ${reminder.name}`,
-          icon: "/favicon.png",
-          tag: reminder.id,
+          return {
+            id: index + 1,
+            title: "💊 Medicine Reminder",
+            body: `Time to take: ${reminder.name}`,
+            schedule: {
+              at: target,
+              repeats: true,
+              every: "day" as const,
+            },
+            smallIcon: "ic_launcher",
+            largeIcon: "ic_launcher",
+            sound: "default",
+          };
         });
-      }, delay);
 
-      timers.push(timer);
+        await LocalNotifications.schedule({ notifications });
+      } catch {
+        // Fallback: try web notifications if Capacitor not available
+        if ("Notification" in window && Notification.permission === "granted") {
+          // Web notification fallback (only works with app open)
+        }
+      }
     }
 
-    reminders.forEach(scheduleNotification);
-
-    return () => {
-      timers.forEach(clearTimeout);
-    };
-  }, [reminders, notifPermission]);
+    scheduleNativeNotifications();
+  }, [reminders]);
 
   const requestPermission = async () => {
-    // In Capacitor (Android app), Web Notification API doesn't properly trigger the system prompt.
-    // Always open native notification settings directly.
-    await openNotificationSettings();
+    try {
+      const { LocalNotifications } = await import("@capacitor/local-notifications");
+      const result = await LocalNotifications.requestPermissions();
+      if (result.display === "granted") {
+        setNotifPermission("granted");
+      } else {
+        // Open native settings if denied
+        await openNotificationSettings();
+      }
+    } catch {
+      // Fallback: open native settings
+      await openNotificationSettings();
+    }
   };
 
   const openNotificationSettings = async () => {
@@ -118,7 +155,7 @@ export default function RemindersPage() {
     }
   };
 
-  const addReminder = useCallback(() => {
+  const addReminder = useCallback(async () => {
     if (!name.trim()) return;
     const newReminder: Reminder = {
       id: generateId(),
@@ -127,6 +164,30 @@ export default function RemindersPage() {
       frequency,
     };
     setReminders((prev) => [...prev, newReminder]);
+
+    // Schedule a test notification in 5 seconds to verify it works
+    try {
+      const { LocalNotifications } = await import("@capacitor/local-notifications");
+      const permResult = await LocalNotifications.checkPermissions();
+      if (permResult.display !== "granted") {
+        await LocalNotifications.requestPermissions();
+      }
+      const testTime = new Date(Date.now() + 5000); // 5 seconds from now
+      await LocalNotifications.schedule({
+        notifications: [{
+          id: Math.floor(Math.random() * 100000),
+          title: "💊 Reminder Set!",
+          body: `You'll be reminded to take: ${name.trim()}`,
+          schedule: { at: testTime },
+          smallIcon: "ic_launcher",
+          sound: "default",
+        }],
+      });
+    } catch (e) {
+      // Capacitor not available (web browser) - silently ignore
+      console.log("Local notification schedule failed:", e);
+    }
+
     setName("");
     setTime("08:00");
     setFrequency("daily");

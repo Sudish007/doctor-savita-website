@@ -7,12 +7,15 @@ const config: CapacitorConfig = {
   server: {
     url: 'https://drsavitak.netlify.app',
     cleartext: false,
+    androidScheme: 'https',
   },
   android: {
     buildOptions: {
       keystorePath: undefined,
       keystoreAlias: undefined,
     },
+    // Allow Capacitor bridge to work with remote URL
+    allowMixedContent: true,
   },
   plugins: {
     SplashScreen: {
@@ -25,6 +28,11 @@ const config: CapacitorConfig = {
     StatusBar: {
       backgroundColor: '#0D9488',
       style: 'LIGHT',
+    },
+    LocalNotifications: {
+      smallIcon: 'ic_launcher',
+      iconColor: '#004123',
+      sound: 'default',
     },
   },
 };
